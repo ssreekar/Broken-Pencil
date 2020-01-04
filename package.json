@@ -1,0 +1,18 @@
+{
+    "name": "current-project",
+    "version": "1.0.0",
+    "description": "demo project.",
+    "scripts": {
+      "lite": "lite-server --port 10001",
+      "devStart": "nodemon server.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "socket.io": "^2.2.0"
+    },
+    "devDependencies": {
+      "lite-server": "^1.3.1",
+      "nodemon": "^1.19.0"
+    }
+ }
