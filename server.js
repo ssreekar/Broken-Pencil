@@ -3,41 +3,44 @@ const io = require("socket.io")(3000)
 users = {}
 
 // Lobby Id
-theRoom = 'global_room'
+rooms = {}
+globalRoom = 'global_room'
 
 io.on("connection", socket => {
     console.log("nEW User")
-    socket.join(theRoom)
+    socket.join(globalRoom)
+    rooms[socket.id] = globalRoom
+
     socket.on('send-chat-message', message=>{
-        socket.to(theRoom).emit('chat-message', message)
-        console.log(message.message)
+        socket.to(rooms[socket.id]).emit('chat-message', message)
+        console.log(`${users[socket.id]} sent ${message.message} to room: ${rooms[socket.id]}`)
     })
-    //edit start
+
     socket.on('new-member', name=>{
         if (Object.values(users).indexOf(name) > -1) {
             socket.emit('name-error')
-            socket.to(theRoom).emit('user-list', name)
+            socket.to(globalRoom).emit('user-list', name)
         }
         else{
             users[socket.id] = name
-            socket.to(theRoom).emit('user-connected', name)
-            socket.to(theRoom).emit('user-list', name)
+            socket.to(globalRoom).emit('user-connected', name)
+            socket.to(globalRoom).emit('user-list', name)
         }
-        
     })
-    //edit end
 
     socket.on('disconnect', ()=>{
-        socket.to(theRoom).emit('user-disconnected', users[socket.id])
+        socket.to(globalRoom).emit('user-disconnected', users[socket.id])
         delete users[socket.id]
+        delete rooms[socket.id]
     })
 
     //Joining Rooms
     socket.on('join-room', roomName=>{
-        console.log("Joined Room " + roomName)
+        console.log(`${users[socket.id]} Joined ${roomName}`)
+        socket.leave(rooms[socket.id])
         socket.join(roomName)
-        theRoom = roomName
-        socket.to(theRoom).emit('user-joined-lobby', users[socket.id])
+        rooms[socket.id] = roomName
+        socket.to(rooms[socket.id]).emit('user-joined-lobby', users[socket.id])
     })
     
 })
