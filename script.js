@@ -3,9 +3,16 @@ const messageForm = document.getElementById('inputStuff')
 const messageInput = document.getElementById('inputOne')
 const messageContainer = document.getElementById('firstDiv')
 
+//edit start
 const name = prompt("What is your name?")
-appendInfo("You Joined")
 socket.emit('new-member', name)
+socket.on('name-error', function(){
+    const name = prompt("That name is taken. Please enter another name!")
+    socket.emit('new-member', name)
+})
+//edit end
+
+appendInfo("You Joined")
 
 socket.on('chat-message', data=>{
     appendInfo(data.name +": " + data.message)
