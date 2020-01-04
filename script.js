@@ -18,6 +18,7 @@ socket.on('user-connected', name=>{
 socket.on('user-disconnected', name=>{
     appendInfo(name + " Disconnected")
 })
+
 messageForm.addEventListener('submit', e =>{
     e.preventDefault()
     const message = messageInput.value
@@ -31,3 +32,23 @@ function appendInfo (info){
     messageElement.innerText = info
     messageContainer.append(messageElement)
 }
+
+//Lobby Constants
+const lobbyForm = document.getElementById('lobbyForm')
+const lobbyTextBox = document.getElementById('lobbyName')
+
+//Handling Join Lobby Input
+lobbyForm.addEventListener('submit', e=>{
+    e.preventDefault()
+    const lobbyName = lobbyTextBox.value;
+    console.log(lobbyName)
+    appendInfo("You Joined Lobby")
+    socket.emit('join-room', lobbyName)
+    lobbyTextBox.value = ''
+})
+
+//User Joined Lobby
+socket.on('user-joined-lobby', userName=>{
+    appendInfo(userName + " Joined Lobby")
+})
+
