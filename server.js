@@ -12,10 +12,21 @@ io.on("connection", socket => {
         socket.to(theRoom).emit('chat-message', message)
         console.log(message.message)
     })
+    //edit start
     socket.on('new-member', name=>{
-        users[socket.id] = name
-        socket.to(theRoom).emit('user-connected', name)
+        if (Object.values(users).indexOf(name) > -1) {
+            socket.emit('name-error')
+            socket.to(theRoom).emit('user-list', name)
+        }
+        else{
+            users[socket.id] = name
+            socket.to(theRoom).emit('user-connected', name)
+            socket.to(theRoom).emit('user-list', name)
+        }
+        
     })
+    //edit end
+
     socket.on('disconnect', ()=>{
         socket.to(theRoom).emit('user-disconnected', users[socket.id])
         delete users[socket.id]
