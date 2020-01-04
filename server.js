@@ -42,6 +42,21 @@ io.on("connection", socket => {
         rooms[socket.id] = roomName
         socket.to(rooms[socket.id]).emit('user-joined-lobby', users[socket.id])
     })
-    
+
+    // Current Members
+    socket.on('getRoomMembers', lobby=>{
+        var roomInfo = io.sockets.adapter.rooms[lobby]
+        if (roomInfo){
+            var i
+            console.log(Object.keys(roomInfo.sockets))
+            var names = new Array(roomInfo.length);
+            for (i = 0; i < roomInfo.length; i++){
+                var theName = users[Object.keys(roomInfo.sockets)[i]]
+                names[i] = theName
+                console.log(theName)
+            }
+            socket.emit('currentRoomMembers', names)
+         }
+    })
 })
 
