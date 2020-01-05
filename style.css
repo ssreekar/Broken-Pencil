@@ -1,0 +1,22 @@
+body { 
+    background-color:white;
+    background: url('images/paperBG.jpg') no-repeat center center fixed; 
+    background-size: cover;
+}
+
+#title {
+    margin-top: 2em;
+    text-align: center;
+}
+
+#lobbyDiv, #startDiv{
+    text-align: center;
+}
+
+.borderBox{
+    background-color: rgba(0, 0, 0, 0.3);
+    border-style: solid;
+    margin: 20px;
+    border-radius: 30px;
+
+}

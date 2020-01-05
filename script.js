@@ -95,3 +95,29 @@ socket.on('currentRoomMembers', listOfNames=>{
 function clearCurrentMembers(){
     
 }
+
+// start game
+
+function toggleLobbyStart(){
+    var x = document.getElementById('lobbyStart');
+    if (x.style.display === "none") {
+    x.style.display = "block";
+    } 
+    else {
+    x.style.display = "none";
+    }
+}
+
+const startBtn = document.getElementById('start-button')
+
+startBtn.addEventListener('click', ()=>{
+    socket.emit('start-game', lobbyName)
+    console.log('Start Requested')
+})
+
+socket.on('game-starting', ()=>{
+    console.log('Game Started')
+    appendInfo('Game is Starting!')
+    toggleLobbyStart()
+})
+

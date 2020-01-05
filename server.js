@@ -58,5 +58,30 @@ io.on("connection", socket => {
             socket.emit('currentRoomMembers', names)
          }
     })
+
+    // Current Members
+    socket.on('getRoomMembers', lobby=>{
+        var roomInfo = io.sockets.adapter.rooms[lobby]
+        if (roomInfo){
+            var i
+            console.log(Object.keys(roomInfo.sockets))
+            var names = new Array(roomInfo.length);
+            for (i = 0; i < roomInfo.length; i++){
+                var theName = users[Object.keys(roomInfo.sockets)[i]]
+                names[i] = theName
+                console.log(theName)
+            }
+            socket.emit('currentRoomMembers', names)
+         }
+    })
+    // Start Game
+    socket.on('start-game', lobbyName=>{
+        io.in(lobbyName).emit('game-starting')
+        console.log(`Game starting in ${lobbyName}`)
+    })
+
 })
 
+
+
+    
