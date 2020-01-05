@@ -6,8 +6,9 @@
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script defer src="word-generator.js"></script>
     <script defer src="script.js"></script>
-    <script defer src="word-generator.js" type = "module"></script>
+    
 </head>
 <body>
 
@@ -26,9 +27,8 @@
             <button type="submit" id="start-button">Start Game</button>
         </div>
     </div>
-    <div id="wordBank">
-        <button type="submit" id="get-words">Generate Words</button>
-    </div>
+    <div id="instructions"></div>
+    <div id="wordBank"></div>
     <div class="col-3 borderBox">
         <h2 id = "CurrentLobby"></h2>
         <h5 id = "LobbyMembers">Lobby Members:</h5>
