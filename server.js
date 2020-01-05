@@ -75,11 +75,18 @@ io.on("connection", socket => {
          }
     })
     // Start Game
+
+    user_words = {}
+
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
         console.log(`Game starting in ${lobbyName}`)
     })
 
+    socket.on('picked-word', word=>{
+        user_words[socket.id] = word
+        socket.emit('word-chosen')
+    })
 })
 
 

@@ -115,9 +115,59 @@ startBtn.addEventListener('click', ()=>{
     console.log('Start Requested')
 })
 
+var word
+const wordBank = document.getElementById('wordBank')
+
 socket.on('game-starting', ()=>{
-    console.log('Game Started')
+    console.log('Game Start')
     appendInfo('Game is Starting!')
     toggleLobbyStart()
+    if (wordBank.style.display == 'none'){
+        wordBank.style.display = 'block'
+    }
+    generateWords()
+    var easyBtn = document.getElementById('easy-btn')
+    easyBtn.addEventListener('click', ()=>{
+        word = easyBtn.value
+        console.log(`You picked: ${word}`)
+        socket.emit('picked-word', word)
+    })
+    var mediumBtn = document.getElementById('medium-btn')
+    mediumBtn.addEventListener('click', ()=>{
+        word = mediumBtn.value
+        console.log(`You picked: ${word}`)
+        socket.emit('picked-word', word)
+    })
+    var hardBtn = document.getElementById('hard-btn')
+    hardBtn.addEventListener('click', ()=>{
+        word = hardBtn.value
+        console.log(`You picked: ${word}`)
+        socket.emit('picked-word', word)
+    })
+    var veryHardBtn = document.getElementById('veryHard-btn')
+    veryHardBtn.addEventListener('click', ()=>{
+        word = veryHardBtn.value
+        console.log(`You picked: ${word}`)
+        socket.emit('picked-word', word)
+    })
 })
+
+function displayInstruction(current){
+    const instructionMessage = document.createElement('h2')
+    const instructions = document.getElementById('instructions')
+    if (current == 'draw'){
+        instructionMessage.innerText = `Try to draw: ${word}`
+        instructions.append(instructionMessage)
+    }
+    else{
+        instructionMessage.innerText = `Guess this drawing`
+        instructions.append(instructionMessage)
+    }
+}
+
+socket.on('word-chosen', ()=>{
+    wordBank.style.display = "none";
+    displayInstruction('draw')
+})
+
 

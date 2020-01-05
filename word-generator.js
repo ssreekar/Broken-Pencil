@@ -8,18 +8,28 @@ var replaceWords = false
 const wordContainer = document.getElementById('wordBank')
 
 function getWordButtons(easy, medium, hard, veryHard){
-    const easyButton = document.createElement('button')
-    const mediumButton = document.createElement('button')
-    const hardButton = document.createElement('button')
-    const veryHardButton = document.createElement('button')
+    var easyButton = document.createElement('button')
+    var mediumButton = document.createElement('button')
+    var hardButton = document.createElement('button')
+    var veryHardButton = document.createElement('button')
     easyButton.innerHTML = easy
     mediumButton.innerHTML = medium
     hardButton.innerHTML = hard
     veryHardButton.innerHTML = veryHard
+
     easyButton.setAttribute('id', 'easy-btn')
     mediumButton.setAttribute('id', 'medium-btn')
     hardButton.setAttribute('id', 'hard-btn')
     veryHardButton.setAttribute('id', 'veryHard-btn')
+
+    easyButton.setAttribute('value', easy)
+    mediumButton.setAttribute('value', medium)
+    hardButton.setAttribute('value', hard)
+    veryHardButton.setAttribute('value', veryHard)
+
+    var wordMessage = document.createElement('h2')
+    wordMessage.innerHTML = 'Pick a Word to Start'
+    wordContainer.append(wordMessage)
     wordContainer.append(easyButton)
     wordContainer.append(mediumButton)
     wordContainer.append(hardButton)
@@ -39,18 +49,15 @@ function removeWordButtons(){
 
 }
 
-const getWords = document.getElementById('get-words')
-
-getWords.addEventListener('click', ()=>{
-    console.log('button clicked')
-    var easy = EasyWords[Math.floor(Math.random() * EasyWords.length)]
-    var medium = MediumWords[Math.floor(Math.random() * MediumWords.length)]
-    var hard = HardWords[Math.floor(Math.random() * HardWords.length)]
-    var veryHard = VeryHardWords[Math.floor(Math.random() * VeryHardWords.length)]
-    console.log(easy, medium, hard, veryHard)
+function generateWords(){
+    var word1 = EasyWords[Math.floor(Math.random() * EasyWords.length)]
+    var word2 = MediumWords[Math.floor(Math.random() * MediumWords.length)]
+    var word3 = HardWords[Math.floor(Math.random() * HardWords.length)]
+    var word4 = VeryHardWords[Math.floor(Math.random() * VeryHardWords.length)]
+    console.log(word1, word2, word3, word4)
     if (replaceWords){
         removeWordButtons()
     }
-    getWordButtons(easy, medium, hard, veryHard)
+    getWordButtons(word1, word2, word3, word4)
     replaceWords = true
-})
+}
