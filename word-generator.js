@@ -5,8 +5,7 @@ var VeryHardWords= ['Journal', 'Advertise', 'Personal', 'Jet', 'lag', 'Flag', 'T
 
 var replaceWords = false
 
-const wordContainer = document.getElementById('wordDiv')
-
+const wordContainer = document.getElementById('wordBank')
 
 function getWordButtons(easy, medium, hard, veryHard){
     const easyButton = document.createElement('button')
@@ -40,7 +39,7 @@ function removeWordButtons(){
 
 }
 
-const getWords = document.getElementById('getWords')
+const getWords = document.getElementById('get-words')
 
 getWords.addEventListener('click', ()=>{
     console.log('button clicked')
