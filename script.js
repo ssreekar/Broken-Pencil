@@ -13,7 +13,6 @@ socket.on('name-error', ()=>{
 
 appendInfo("You Joined")
 changeLobby("Global Lobby")
-addMember(name)
 displayCurrentMembers()
 
 socket.on('chat-message', data=>{
@@ -50,7 +49,6 @@ const lobbyTextBox = document.getElementById('lobbyName')
 lobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
     lobbyName = lobbyTextBox.value;
-    console.log(lobbyName)
     appendInfo("You Joined Lobby")
     changeLobby(lobbyName)
     socket.emit('join-room', lobbyName)
@@ -83,17 +81,19 @@ function displayCurrentMembers(){
 
 // Getting the User Members
 socket.on('currentRoomMembers', listOfNames=>{
-    var i
+    var i;
     clearCurrentMembers()
     for (i = 0; i < listOfNames.length; i++){
         addMember(listOfNames[i])
-        console.log(listOfNames[i])
     }
 })
 
 //clears all the members of a lobby
 function clearCurrentMembers(){
-    
+    var header = document.getElementById('LobbyMembers')
+    while(!(header.childElementCount == 0)){
+        header.lastChild.remove()
+    }
 }
 
 // start game
