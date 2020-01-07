@@ -71,6 +71,16 @@ io.on("connection", socket => {
         user_words[socket.id] = word
         socket.emit('word-chosen')
     })
+
+    socket.on('finished-event', (event)=>{
+        if (event == 'drawing'){
+            socket.emit('start-guessing')
+        }
+        else if (event == 'guessing'){
+            socket.emit('start-drawing')
+        }
+        
+    })
 })
 
 
