@@ -115,6 +115,7 @@ startBtn.addEventListener('click', ()=>{
     console.log('Start Requested')
 })
 
+// Word Selection
 var word
 const wordBank = document.getElementById('wordBank')
 
@@ -152,22 +153,120 @@ socket.on('game-starting', ()=>{
     })
 })
 
-function displayInstruction(current){
-    const instructionMessage = document.createElement('h2')
-    const instructions = document.getElementById('instructions')
+
+const instructions = document.getElementById('instructions')
+var instructionMessage
+function displayInstruction(current, deletePrevious){
+    if (deletePrevious == true){
+        instructionMessage = document.getElementById('instructionMessage')
+        instructionMessage.parentNode.removeChild(instructionMessage)
+    }
+    else{
+        instructionMessage = document.createElement('h2')
+        instructionMessage.setAttribute('id', 'instructionMessage')
+    }
     if (current == 'draw'){
         instructionMessage.innerText = `Try to draw: ${word}`
         instructions.append(instructionMessage)
     }
     else{
-        instructionMessage.innerText = `Guess this drawing`
+        instructionMessage.innerText = `Guess this drawing!`
         instructions.append(instructionMessage)
     }
 }
 
+// Draw Timer
+
+function finishedEvent(event){
+    console.log(`Done ${event}`)
+    timerText.parentNode.removeChild(timerText)
+    if (event == 'drawing'){
+        finishButton.parentNode.removeChild(finishButton)
+    }
+    else if (event == 'guessing'){
+        guessForm.parentNode.removeChild(guessForm)
+    }
+    
+    clearInterval(countdown)
+    socket.emit('finished-event', event)
+}
+
+const timer = document.getElementById('timer')
+var timerText
+var countdown
+function startTimer(start, event){
+    var timeLeft = start
+    timerText = document.createElement('h3')
+    timerText.innerText = `Time Remaining: ${timeLeft}`
+    timer.append(timerText)
+    countdown = setInterval(()=>{
+        timeLeft -= 1
+        timerText.innerText = `Time Remaining: ${timeLeft}`
+        timerText.parentNode.removeChild(timerText);
+        timer.append(timerText)
+        if (timeLeft <= 0){
+            finishedEvent(event)
+        }
+    }, 1000)
+}
+
+var finishButton
+function createFinishButton(){
+    const finish = document.getElementById('finish')
+    finishButton = document.createElement('button')
+    finishButton.setAttribute('id', 'finishButton')
+    finishButton.innerText = 'Done!'
+    finish.append(finishButton)
+    finishButton.addEventListener('click', ()=>{
+        finishedEvent('drawing')
+    })
+}
+
 socket.on('word-chosen', ()=>{
     wordBank.style.display = "none";
-    displayInstruction('draw')
+    displayInstruction('draw', false)
+    createFinishButton()
+    startTimer(30, 'drawing')
+})
+
+socket.on('start-drawing', ()=>{
+    displayInstruction('draw', true)
+    createFinishButton()
+    startTimer(30, 'drawing')
+})
+
+// Guess drawing
+var guessedWord
+var guessForm = document.createElement('form')
+var guessTextBox = document.createElement('input') 
+var guessDiv = document.getElementById('guessDiv')
+var submitGuess = document.createElement('button')
+function createGuessForm(){
+    guessForm.setAttribute('id', 'guessWord')
+    guessTextBox.setAttribute('type', 'text')
+    submitGuess.setAttribute('type', 'submit')
+    submitGuess.innerText = 'Enter'
+
+    guessDiv.append(guessForm)
+    guessForm.append(guessTextBox)
+    guessForm.append(submitGuess)
+
+    startTimer(15, 'guessing')
+    
+}
+
+guessForm.addEventListener('submit', e=>{
+    e.preventDefault()
+    guessedWord = guessTextBox.value;
+    console.log(`You guessed: ${guessedWord}`)
+    guessTextBox.value = ''
+    finishedEvent('guessing')
+})
+
+socket.on('start-guessing', ()=>{
+    console.log('Start Guessing!')
+    displayInstruction('guess', true)
+    createGuessForm()
 })
 
 
