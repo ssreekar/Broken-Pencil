@@ -1,3 +1,4 @@
+var oCanvas = document.getElementById('draw');
 var canvas, ctx,
     brush = {
         x: 0,
@@ -21,7 +22,7 @@ function redraw () {
         for (var j = 0; j < s.points.length; j++) {
             var p = s.points[j];
             ctx.lineTo(p.x, p.y);
-        }
+        } 
         ctx.stroke();
     }
 }
@@ -29,10 +30,9 @@ function redraw () {
 function init () {
     canvas = $('#draw');
     ctx = canvas[0].getContext('2d');
-
     function mouseEvent (e) {
-        brush.x = e.pageX;
-        brush.y = e.pageY;
+        brush.x = e.pageX - oCanvas.offsetLeft;
+        brush.y = e.pageY - oCanvas.offsetTop;
 
         currentStroke.points.push({
             x: brush.x,
