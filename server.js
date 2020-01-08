@@ -25,11 +25,13 @@ io.on("connection", socket => {
             users[socket.id] = name
             socket.to(globalRoom).emit('user-connected', name)
             socket.to(globalRoom).emit('user-list', name)
+            socket.to(globalRoom).emit('user-check-name', users[socket.id])
         }
     })
 
     socket.on('disconnect', ()=>{
         socket.to(globalRoom).emit('user-disconnected', users[socket.id])
+        socket.leaveAll()
         delete users[socket.id]
         delete rooms[socket.id]
     })
@@ -37,10 +39,12 @@ io.on("connection", socket => {
     //Joining Rooms
     socket.on('join-room', roomName=>{
         console.log(`${users[socket.id]} Joined ${roomName}`)
-        socket.leave(rooms[socket.id])
+        socket.leaveAll(rooms[socket.id])
+        socket.to(rooms[socket.id]).emit('user-check-name')
         socket.join(roomName)
         rooms[socket.id] = roomName
         socket.to(rooms[socket.id]).emit('user-joined-lobby', users[socket.id])
+        socket.to(rooms[socket.id]).emit('user-check-name')
     })
 
     // Current Members
@@ -57,7 +61,6 @@ io.on("connection", socket => {
          }
     })
     // Start Game
-
     user_words = {}
 
     socket.on('start-game', lobbyName=>{

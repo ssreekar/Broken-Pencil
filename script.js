@@ -61,6 +61,10 @@ socket.on('user-joined-lobby', userName=>{
     appendInfo(userName + " Joined Lobby")
 })
 
+socket.on('user-check-name', ()=>{
+    displayCurrentMembers()
+})
+
 //Current Lobby Function
 function changeLobby(lobbyName){
     document.getElementById("CurrentLobby").innerHTML = "Current Lobby: " + lobbyName    
