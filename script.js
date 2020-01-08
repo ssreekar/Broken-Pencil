@@ -268,5 +268,3 @@ socket.on('start-guessing', ()=>{
     displayInstruction('guess', true)
     createGuessForm()
 })
-
-
