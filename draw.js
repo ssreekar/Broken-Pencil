@@ -28,10 +28,6 @@ function redraw () {
 
 function init () {
     canvas = $('#draw');
-    canvas.attr({
-        width: window.innerWidth,
-        height: window.innerHeight,
-    });
     ctx = canvas[0].getContext('2d');
 
     function mouseEvent (e) {

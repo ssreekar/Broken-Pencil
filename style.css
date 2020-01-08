@@ -18,5 +18,21 @@ body {
     border-style: solid;
     margin: 20px;
     border-radius: 30px;
+}
 
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    background-color: #3af;
+    border-bottom: 2px solid black;
+    position: absolute;
+}
+
+.top-bar * {
+    margin: 10px 10px;
+}
+
+#draw {
+    display: block;
+    border: 2px solid black;
 }
