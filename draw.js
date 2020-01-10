@@ -28,7 +28,7 @@ function redraw () {
 }
 
 function init () {
-    canvas = $('#draw');
+    canvas = $('#draw'); //same thing as getElementByID
     ctx = canvas[0].getContext('2d');
     function mouseEvent (e) {
         brush.x = e.pageX - oCanvas.offsetLeft;
@@ -66,7 +66,14 @@ function init () {
     });
 
     $('#save-btn').click(function () {
-        window.open(canvas[0].toDataURL());
+        var artwork = canvas[0].toDataURL();
+        console.log(artwork);
+        //this commented part below is code to be copied when redrawing saved image!
+        //var art = document.createElement('img'); 
+        //art.src = artwork
+        //ctx.drawImage(art, 5, 5,);
+        // Temp Soln since current storage for game has yet to be decided on
+
     });
 
     $('#undo-btn').click(function () {

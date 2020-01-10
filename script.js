@@ -272,3 +272,6 @@ socket.on('start-guessing', ()=>{
     displayInstruction('guess', true)
     createGuessForm()
 })
+
+// Saved Image from Drawing is in draw.js
+// Save Button Function is in init function
