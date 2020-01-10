@@ -1,13 +1,23 @@
-const io = require("socket.io")(3000)
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const io = require("socket.io")(http);
+const port = process.env.PORT || 3000;
 
-users = {}
+let users = {};
 
 // Lobby Id
-rooms = {}
-globalRoom = 'global_room'
+let rooms = {};
+let globalRoom = 'global_room';
 
-io.on("connection", socket => {
-    console.log("nEW User")
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', socket => {
+    console.log("new user")
     socket.join(globalRoom)
     rooms[socket.id] = globalRoom
 
@@ -82,6 +92,10 @@ io.on("connection", socket => {
         }
         
     })
+})
+
+http.listen(port, () => {
+    console.log('Listening on port: ' + port);
 })
 
 

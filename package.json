@@ -4,11 +4,13 @@
   "description": "demo project.",
   "scripts": {
     "lite": "lite-server --port 10001",
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
