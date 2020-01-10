@@ -1,10 +1,41 @@
 const socket = io('http://localhost:3000')
-const messageForm = document.getElementById('inputStuff')
-const messageInput = document.getElementById('inputOne')
-const messageContainer = document.getElementById('firstDiv')
 
-const name = prompt("What is your name?")
-var lobbyName = 'global_room'
+// Variables/Constants
+
+// Chat
+const messageForm = document.getElementById('chat-form')
+const messageInput = document.getElementById('chat-input')
+const messageDiv = document.getElementById('chat-div')
+
+// Lobby
+var lobbyName = 'Global'
+const header = document.getElementById('lobby-members')
+const lobbyDiv = document.getElementById('lobby-div')
+const lobbyForm = document.getElementById('lobby-form')
+const lobbyInput = document.getElementById('lobby-input')
+
+
+// Start Game
+const startBtn = document.getElementById('start-button')
+
+// Word
+const wordBank = document.getElementById('word-bank')
+var word
+
+// Round Instructions
+const instructions = document.getElementById('instructions')
+var instructionMessage
+
+// Timer
+const timer = document.getElementById('timer')
+var timerText
+var countdown
+
+// Finish Round
+const finish = document.getElementById('finish')
+
+var name = prompt("What is your name?")
+
 socket.emit('new-member', name)
 socket.on('name-error', ()=>{
     const name = prompt("That name is taken. Please enter another name!")
@@ -12,7 +43,7 @@ socket.on('name-error', ()=>{
 })
 
 appendInfo("You Joined")
-changeLobby("Global Lobby")
+changeLobby("Global")
 displayCurrentMembers()
 
 socket.on('chat-message', data=>{
@@ -36,23 +67,19 @@ messageForm.addEventListener('submit', e =>{
 })
 
 function appendInfo (info){
-    const messageElement = document.createElement('div')
+    var messageElement = document.createElement('div')
     messageElement.innerText = info
-    messageContainer.append(messageElement)
+    messageDiv.append(messageElement)
 }
-
-//Lobby Constants
-const lobbyForm = document.getElementById('lobbyForm')
-const lobbyTextBox = document.getElementById('lobbyName')
 
 //Handling Join Lobby Input
 lobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
-    lobbyName = lobbyTextBox.value;
+    lobbyName = lobbyInput.value;
     appendInfo("You Joined Lobby")
     changeLobby(lobbyName)
-    socket.emit('join-room', lobbyName)
-    lobbyTextBox.value = ''
+    socket.emit('join-lobby', lobbyName)
+    lobbyInput.value = ''
     displayCurrentMembers()
 })
 
@@ -67,12 +94,11 @@ socket.on('user-check-name', ()=>{
 
 //Current Lobby Function
 function changeLobby(lobbyName){
-    document.getElementById("CurrentLobby").innerHTML = "Current Lobby: " + lobbyName    
+    document.getElementById("current-lobby").innerHTML = "Current Lobby: " + lobbyName    
 }
 
 //Add Lobby Member
 function addMember(memberName){
-    const header = document.getElementById('LobbyMembers')
     const addition = document.createElement('h5')
     addition.innerHTML = memberName
     header.append(addition)
@@ -80,11 +106,11 @@ function addMember(memberName){
 
 // Display all Current Members
 function displayCurrentMembers(){
-    socket.emit('getRoomMembers', lobbyName)
+    socket.emit('get-lobby-members', lobbyName)
 }
 
 // Getting the User Members
-socket.on('currentRoomMembers', listOfNames=>{
+socket.on('current-lobby-members', listOfNames=>{
     var i;
     clearCurrentMembers()
     for (i = 0; i < listOfNames.length; i++){
@@ -94,25 +120,23 @@ socket.on('currentRoomMembers', listOfNames=>{
 
 //clears all the members of a lobby
 function clearCurrentMembers(){
-    var header = document.getElementById('LobbyMembers')
     while(!(header.childElementCount == 0)){
         header.lastChild.remove()
     }
 }
 
-// start game
 
+// start game
 function toggleLobbyStart(){
-    var x = document.getElementById('lobbyStart');
     if (x.style.display === "none") {
-    x.style.display = "block";
+        lobbyDiv.style.display = "block";
     } 
     else {
-    x.style.display = "none";
+        lobbyDiv.style.display = "none";
     }
 }
 
-const startBtn = document.getElementById('start-button')
+
 
 startBtn.addEventListener('click', ()=>{
     socket.emit('start-game', lobbyName)
@@ -120,8 +144,7 @@ startBtn.addEventListener('click', ()=>{
 })
 
 // Word Selection
-var word
-const wordBank = document.getElementById('wordBank')
+
 
 socket.on('game-starting', ()=>{
     console.log('Game Start')
@@ -158,8 +181,7 @@ socket.on('game-starting', ()=>{
 })
 
 
-const instructions = document.getElementById('instructions')
-var instructionMessage
+
 function displayInstruction(current, deletePrevious){
     if (deletePrevious == true){
         instructionMessage = document.getElementById('instructionMessage')
@@ -195,9 +217,7 @@ function finishedEvent(event){
     socket.emit('finished-event', event)
 }
 
-const timer = document.getElementById('timer')
-var timerText
-var countdown
+
 function startTimer(start, event){
     var timeLeft = start
     timerText = document.createElement('h3')
@@ -216,7 +236,6 @@ function startTimer(start, event){
 
 var finishButton
 function createFinishButton(){
-    const finish = document.getElementById('finish')
     finishButton = document.createElement('button')
     finishButton.setAttribute('id', 'finishButton')
     finishButton.innerText = 'Done!'
@@ -243,7 +262,7 @@ socket.on('start-drawing', ()=>{
 var guessedWord
 var guessForm = document.createElement('form')
 var guessTextBox = document.createElement('input') 
-var guessDiv = document.getElementById('guessDiv')
+var guessDiv = document.getElementById('guess-div')
 var submitGuess = document.createElement('button')
 function createGuessForm(){
     guessForm.setAttribute('id', 'guessWord')

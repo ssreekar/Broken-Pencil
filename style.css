@@ -13,7 +13,7 @@ body {
     text-align: center;
 }
 
-.borderBox{
+.border-box{
     background-color: rgba(0, 0, 0, 0.3);
     border-style: solid;
     margin: 20px;
