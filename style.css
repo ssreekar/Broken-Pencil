@@ -4,20 +4,23 @@ body {
     background-size: cover;
 }
 
-#title {
-    margin-top: 2em;
-    text-align: center;
+#title-div{
+    margin: 30px;
 }
 
-.text-center{
-    text-align: center;
+#lobby-div{
+    margin: 15px;
+}
+
+.label{
+    margin-left: 5px;
 }
 
 .border-box{
     background-color: rgba(0, 0, 0, 0.3);
     border-style: solid;
-    margin: 20px;
-    border-radius: 30px;
+    padding: 20px;
+    border-radius: 0px;
 }
 
 .top-bar {
@@ -35,4 +38,6 @@ body {
 #draw {
     display: block;
     border: 2px solid black;
+    width: 100%;
+    height: auto;
 }

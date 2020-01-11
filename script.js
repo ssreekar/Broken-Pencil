@@ -1,91 +1,57 @@
 const socket = io('http://localhost:3000')
+setupHomepage()
 
-// Variables/Constants
-
-// Chat
-const messageForm = document.getElementById('chat-form')
-const messageInput = document.getElementById('chat-input')
-const messageDiv = document.getElementById('chat-div')
-
-// Lobby
-var lobbyName = 'Global'
-const header = document.getElementById('lobby-members')
-const lobbyDiv = document.getElementById('lobby-div')
-const lobbyForm = document.getElementById('lobby-form')
-const lobbyInput = document.getElementById('lobby-input')
-
-
-// Start Game
-const startBtn = document.getElementById('start-button')
-
-// Word
-const wordBank = document.getElementById('word-bank')
-var word
-
-// Round Instructions
-const instructions = document.getElementById('instructions')
-var instructionMessage
-
-// Timer
-const timer = document.getElementById('timer')
-var timerText
-var countdown
-
-// Finish Round
-const finish = document.getElementById('finish')
-
-var name = prompt("What is your name?")
-
-socket.emit('new-member', name)
-socket.on('name-error', ()=>{
-    const name = prompt("That name is taken. Please enter another name!")
+var name
+avatarForm.addEventListener('submit', e=>{
+    e.preventDefault()
+    name = avatarInput.value
     socket.emit('new-member', name)
+    appendInfo('You Joined')
+    changeLobby('Global')
+    avatarInput.value = ''
 })
-
-appendInfo("You Joined")
-changeLobby("Global")
-displayCurrentMembers()
-
+  
 socket.on('chat-message', data=>{
-    appendInfo(data.name +": " + data.message)
+    appendInfo(data.name +': ' + data.message)
 })
 
 socket.on('user-connected', name=>{
-    appendInfo(name + " Connected")
+    appendInfo(name + ' Connected')
 })
 
 socket.on('user-disconnected', name=>{
-    appendInfo(name + " Disconnected")
+    appendInfo(name + ' Disconnected')
 })
 
-messageForm.addEventListener('submit', e =>{
+chatForm.addEventListener('submit', e =>{
     e.preventDefault()
-    const message = messageInput.value
+    const message = chatInput.value
     socket.emit('send-chat-message', {message, name})
-    appendInfo("You: " + message)
-    messageInput.value = ''
+    appendInfo('You: ' + message)
+    chatInput.value = ''
 })
 
 function appendInfo (info){
-    var messageElement = document.createElement('div')
-    messageElement.innerText = info
-    messageDiv.append(messageElement)
+    var chatElement = document.createElement('div')
+    chatElement.innerText = info
+    chatBox.append(chatElement)
 }
 
 //Handling Join Lobby Input
 lobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
     lobbyName = lobbyInput.value;
-    appendInfo("You Joined Lobby")
+    appendInfo('You Joined Lobby')
     changeLobby(lobbyName)
     socket.emit('join-lobby', lobbyName)
     lobbyInput.value = ''
+    setupGamepage()
     displayCurrentMembers()
 })
 
 //User Joined Lobby
 socket.on('user-joined-lobby', userName=>{
-    appendInfo(userName + " Joined Lobby")
+    appendInfo(userName + ' Joined Lobby')
 })
 
 socket.on('user-check-name', ()=>{
@@ -94,7 +60,7 @@ socket.on('user-check-name', ()=>{
 
 //Current Lobby Function
 function changeLobby(lobbyName){
-    document.getElementById("current-lobby").innerHTML = "Current Lobby: " + lobbyName    
+    currentLobby.innerHTML = 'Current Lobby: ' + lobbyName    
 }
 
 //Add Lobby Member
@@ -128,11 +94,11 @@ function clearCurrentMembers(){
 
 // start game
 function toggleLobbyStart(){
-    if (x.style.display === "none") {
-        lobbyDiv.style.display = "block";
+    if (x.style.display === 'none') {
+        lobbyDiv.style.display = 'block';
     } 
     else {
-        lobbyDiv.style.display = "none";
+        lobbyDiv.style.display = 'none';
     }
 }
 
@@ -246,7 +212,7 @@ function createFinishButton(){
 }
 
 socket.on('word-chosen', ()=>{
-    wordBank.style.display = "none";
+    wordBank.style.display = 'none';
     displayInstruction('draw', false)
     createFinishButton()
     startTimer(30, 'drawing')
