@@ -38,6 +38,6 @@ body {
 #draw {
     display: block;
     border: 2px solid black;
-    width: 100%;
+    width: auto;
     height: auto;
 }

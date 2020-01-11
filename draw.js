@@ -31,8 +31,10 @@ function init () {
     canvas = $('#draw'); //same thing as getElementByID
     ctx = canvas[0].getContext('2d');
     function mouseEvent (e) {
-        brush.x = e.pageX - oCanvas.offsetLeft;
-        brush.y = e.pageY - oCanvas.offsetTop;
+        brush.x = e.pageX - getLeftOffset(oCanvas);
+        brush.y = e.pageY - getTopOffset(oCanvas);
+        console.log(getTopOffset(oCanvas))
+        console.log(getLeftOffset(oCanvas))
 
         currentStroke.points.push({
             x: brush.x,
@@ -96,3 +98,21 @@ function init () {
 }
 
 $(init);
+
+function getLeftOffset(curObj){
+    var offset = 0
+    while(!(curObj === null)){
+        offset += curObj.offsetLeft
+        curObj = curObj.offsetParent
+    }
+    return offset
+}
+
+function getTopOffset(curObj){
+    var offset = 0
+    while(!(curObj === null)){
+        offset += curObj.offsetTop
+        curObj = curObj.offsetParent
+    }
+    return offset
+}
