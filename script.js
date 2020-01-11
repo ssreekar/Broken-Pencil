@@ -1,7 +1,7 @@
 const socket = io('http://localhost:3000')
 setupHomepage()
 
-var name
+var name = 'Guest'
 avatarForm.addEventListener('submit', e=>{
     e.preventDefault()
     name = avatarInput.value
