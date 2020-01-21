@@ -3,61 +3,64 @@ const io = require("socket.io")(3000)
 users = {}
 
 // Lobby Id
-rooms = {}
-globalRoom = 'global_room'
+lobbies = {}
+globalLobby = 'Global    '
 
 io.on("connection", socket => {
-    console.log("nEW User")
-    socket.join(globalRoom)
-    rooms[socket.id] = globalRoom
+    console.log("New User Connection")
+    socket.join(globalLobby)
+    lobbies[socket.id] = globalLobby
 
     socket.on('send-chat-message', message=>{
-        socket.to(rooms[socket.id]).emit('chat-message', message)
-        console.log(`${users[socket.id]} sent ${message.message} to room: ${rooms[socket.id]}`)
+        socket.to(lobbies[socket.id]).emit('chat-message', message)
+        console.log(`${users[socket.id]} sent ${message.message} to lobby: ${lobbies[socket.id]}`)
     })
 
     socket.on('new-member', name=>{
         if (Object.values(users).indexOf(name) > -1) {
             socket.emit('name-error')
-            socket.to(globalRoom).emit('user-list', name)
+            socket.to(globalLobby).emit('user-list', name)
         }
         else{
             users[socket.id] = name
-            socket.to(globalRoom).emit('user-connected', name)
-            socket.to(globalRoom).emit('user-list', name)
+            socket.to(globalLobby).emit('user-connected', name)
+            socket.to(globalLobby).emit('user-list', name)
+            socket.to(globalLobby).emit('user-check-name', users[socket.id])
         }
     })
 
     socket.on('disconnect', ()=>{
-        socket.to(globalRoom).emit('user-disconnected', users[socket.id])
+        socket.to(globalLobby).emit('user-disconnected', users[socket.id])
+        socket.leaveAll()
         delete users[socket.id]
-        delete rooms[socket.id]
+        delete lobbies[socket.id]
     })
 
-    //Joining Rooms
-    socket.on('join-room', roomName=>{
-        console.log(`${users[socket.id]} Joined ${roomName}`)
-        socket.leave(rooms[socket.id])
-        socket.join(roomName)
-        rooms[socket.id] = roomName
-        socket.to(rooms[socket.id]).emit('user-joined-lobby', users[socket.id])
+    //Joining lobbies
+    socket.on('join-lobby', lobbyName=>{
+        console.log(`${users[socket.id]} Joined ${lobbyName}`)
+        socket.leaveAll(lobbies[socket.id])
+        socket.to(lobbies[socket.id]).emit('user-check-name')
+        socket.join(lobbyName)
+        lobbies[socket.id] = lobbyName
+        socket.to(lobbies[socket.id]).emit('user-joined-lobby', users[socket.id])
+        socket.to(lobbies[socket.id]).emit('user-check-name')
     })
 
     // Current Members
-    socket.on('getRoomMembers', lobby=>{
-        var roomInfo = io.sockets.adapter.rooms[lobby]
-        if (roomInfo){
+    socket.on('get-lobby-members', lobbyName=>{
+        var lobbyInfo = io.sockets.adapter.rooms[lobbyName]
+        if (lobbyInfo){
             var i
-            var names = new Array(roomInfo.length);
-            for (i = 0; i < roomInfo.length; i++){
-                var theName = users[Object.keys(roomInfo.sockets)[i]]
+            var names = new Array(lobbyInfo.length);
+            for (i = 0; i < lobbyInfo.length; i++){
+                var theName = users[Object.keys(lobbyInfo.sockets)[i]]
                 names[i] = theName
             }
-            socket.emit('currentRoomMembers', names)
+            socket.emit('current-lobby-members', names)
          }
     })
     // Start Game
-
     user_words = {}
 
     socket.on('start-game', lobbyName=>{

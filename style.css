@@ -4,19 +4,40 @@ body {
     background-size: cover;
 }
 
-#title {
-    margin-top: 2em;
-    text-align: center;
+#title-div{
+    margin: 30px;
 }
 
-.text-center{
-    text-align: center;
+#lobby-div{
+    margin: 15px;
 }
 
-.borderBox{
+.label{
+    margin-left: 5px;
+}
+
+.border-box{
     background-color: rgba(0, 0, 0, 0.3);
     border-style: solid;
-    margin: 20px;
-    border-radius: 30px;
+    padding: 20px;
+    border-radius: 0px;
+}
 
+.top-bar {
+    display: flex;
+    flex-direction: row;
+    background-color: #3af;
+    border-bottom: 2px solid black;
+    position: absolute;
+}
+
+.top-bar * {
+    margin: 10px 10px;
+}
+
+#draw {
+    display: block;
+    border: 2px solid black;
+    width: auto;
+    height: auto;
 }
