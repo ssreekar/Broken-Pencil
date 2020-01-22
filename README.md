@@ -15,5 +15,5 @@ HTML5, CSS3 and Bootstrap for frontend design
 Server was setup using Express and Node.js
 Multiplayer capabilities made using socket.io
 
-## Created By: Aaron Zhang, Sharujan Sreekaran, Matthew Tam, and Kevin Wang
-
+## Created By: 
+Aaron Zhang, Sharujan Sreekaran, Matthew Tam, and Kevin Wang
