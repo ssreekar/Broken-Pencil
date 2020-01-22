@@ -6,16 +6,16 @@ This game is a combination between pictionary and broken telephone. In your grou
 
 ### Future Updates:
 
-Only display most recent messages in chat (or scrolling feature)
-Implementation of User Accounts / Profiles
-Ability to create private lobbies
+- Only display most recent messages in chat (or scrolling feature)
+- Implementation of User Accounts / Profiles
+- Ability to create private lobbies
 
 ### Languages and Frameworks:
 
-jQuery for drawing tool
-HTML5, CSS3 and Bootstrap for frontend design
-Server was setup using Express and Node.js
-Multiplayer capabilities made using socket.io
+- jQuery for drawing tool
+- HTML5, CSS3 and Bootstrap for frontend design
+- Server was setup using Express and Node.js
+- Multiplayer capabilities made using socket.io
 
 ### Created By: 
 Aaron Zhang, Sharujan Sreekaran, Matthew Tam, and Kevin Wang
