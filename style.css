@@ -41,3 +41,20 @@ body {
     width: auto;
     height: auto;
 }
+
+#chat-messages {
+    overflow: auto;
+    max-height: 30vh;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#chat-box {
+    bottom: 0;
+    position: absolute;
+    width: 90%;
+}
+
+#chat-input {
+    width: 100%;
+}

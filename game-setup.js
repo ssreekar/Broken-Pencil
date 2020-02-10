@@ -10,6 +10,7 @@ const avatarInput = document.getElementById('avatar-input')
 const chatForm = document.getElementById('chat-form')
 const chatInput = document.getElementById('chat-input')
 const chatBox = document.getElementById('chat-box')
+const chatMsg = document.getElementById('chat-messages')
 const chatDiv = document.getElementById('chat-div')
 
 // Lobby

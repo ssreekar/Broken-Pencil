@@ -34,7 +34,7 @@ chatForm.addEventListener('submit', e =>{
 function appendInfo (info){
     var chatElement = document.createElement('div')
     chatElement.innerText = info
-    chatBox.append(chatElement)
+    chatMsg.prepend(chatElement)
 }
 
 //Handling Join Lobby Input
