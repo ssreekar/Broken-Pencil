@@ -25,10 +25,11 @@ const currentLobby = document.getElementById('current-lobby')
 const header = document.getElementById('lobby-members')
 
 // Start Game
-const startBtn = document.getElementById('start-button')
+const startDiv = document.getElementById('start-div')
+const startForm = document.getElementById('start-form')
 
 // Word
-const wordBank = document.getElementById('word-bank')
+const wordDiv = document.getElementById('word-div')
 var word
 
 // Drawing Board
@@ -50,7 +51,8 @@ function setupHomepage(){
     mainDiv.classList.remove('container-fluid')
     mainDiv.classList.add('container')
     currentLobbyDiv.style.display = 'none'
-
+    wordDiv.style.display = 'none'
+    startDiv.style.display = 'none'
     titleHeader.classList.add('bounceInDown')
     titleHeader.addEventListener('animationend', ()=>
     {titleHeader.classList.remove('bounceInDown')})
@@ -59,6 +61,8 @@ function setupHomepage(){
     lobbyDiv.addEventListener('animationend', ()=>
     {lobbyDiv.classList.remove('fadeIn')})
 
+    chatDiv.classList.remove('col-3')
+    chatDiv.classList.add('col-4')
     chatDiv.classList.remove('order-first')  
     chatDiv.classList.add('order-last')
     chatDiv.classList.add('slideInRight')
@@ -81,19 +85,31 @@ function setupHomepage(){
 function setupGamepage(){
     mainDiv.classList.remove('container')
     mainDiv.classList.add('container-fluid')
+    startDiv.style.display = 'block'
 
     currentLobbyDiv.style.display = 'block'
     currentLobbyDiv.classList.add('bounceInRight')
     currentLobbyDiv.addEventListener('animationend', ()=>
     {currentLobbyDiv.classList.remove('bounceInRight')})
 
+    chatDiv.classList.remove('col-4')
+    chatDiv.classList.add('col-3')
     chatDiv.classList.remove('order-last')
     chatDiv.classList.add('order-first')
-    drawingBoard.classList.add('slideInUp')
     chatDiv.classList.add('slideInLeft')
     avatarForm.style.display = 'none'
     lobbyForm.style.display = 'none'
+    drawingBoard.style.display = 'none'
     
+
 }
 
+function setupWordBank(){
+    wordDiv.style.display = 'block'
+    startDiv.style.display = 'none'
+}
 
+function setupStartDraw(){
+    drawingBoard.style.display = 'block'
+    drawingBoard.classList.add('slideInUp')
+}

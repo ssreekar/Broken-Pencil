@@ -5,8 +5,6 @@ var VeryHardWords= ['Journal', 'Advertise', 'Personal', 'Jet', 'lag', 'Flag', 'T
 
 var replaceWords = false
 
-const wordContainer = document.getElementById('wordBank')
-
 function getWordButtons(easy, medium, hard, veryHard){
     var easyButton = document.createElement('button')
     var mediumButton = document.createElement('button')
@@ -29,11 +27,11 @@ function getWordButtons(easy, medium, hard, veryHard){
 
     var wordMessage = document.createElement('h2')
     wordMessage.innerHTML = 'Pick a Word to Start'
-    wordContainer.append(wordMessage)
-    wordContainer.append(easyButton)
-    wordContainer.append(mediumButton)
-    wordContainer.append(hardButton)
-    wordContainer.append(veryHardButton)
+    wordDiv.append(wordMessage)
+    wordDiv.append(easyButton)
+    wordDiv.append(mediumButton)
+    wordDiv.append(hardButton)
+    wordDiv.append(veryHardButton)
 }
 
 function removeWordButtons(){

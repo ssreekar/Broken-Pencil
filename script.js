@@ -93,19 +93,10 @@ function clearCurrentMembers(){
 
 
 // start game
-function toggleLobbyStart(){
-    if (x.style.display === 'none') {
-        lobbyDiv.style.display = 'block';
-    } 
-    else {
-        lobbyDiv.style.display = 'none';
-    }
-}
 
-
-
-startBtn.addEventListener('click', ()=>{
+startForm.addEventListener('click', ()=>{
     socket.emit('start-game', lobbyName)
+    setupWordBank()
     console.log('Start Requested')
 })
 
@@ -115,9 +106,8 @@ startBtn.addEventListener('click', ()=>{
 socket.on('game-starting', ()=>{
     console.log('Game Start')
     appendInfo('Game is Starting!')
-    toggleLobbyStart()
-    if (wordBank.style.display == 'none'){
-        wordBank.style.display = 'block'
+    if (wordDiv.style.display == 'none'){
+        wordDiv.style.display = 'block'
     }
     generateWords()
     var easyBtn = document.getElementById('easy-btn')
@@ -212,8 +202,9 @@ function createFinishButton(){
 }
 
 socket.on('word-chosen', ()=>{
-    wordBank.style.display = 'none';
+    wordDiv.style.display = 'none';
     displayInstruction('draw', false)
+    setupStartDraw()
     createFinishButton()
     startTimer(30, 'drawing')
 })
