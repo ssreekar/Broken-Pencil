@@ -21,43 +21,43 @@
             <img src="images/logo.png" height="150px" width="auto">
         </div>    
         <div id="lobby-div" class="text-center animated">
-            <form id="lobby-form">
-                <input type="text" id="lobby-input" placeholder="Enter Lobby Name">
-                <button type="submit">Join Lobby</button>
+            <form id="lobby-form" class="form-inline">
+                <input type="text" id="lobby-input" class="form-control" placeholder="Enter Lobby Name:">
+                <button type="submit" class="btn btn-info">Join Lobby</button>
             </form>
         </div>
-     
+    
         <!--In Game Divs-->
-        <div id="instructions" class="text-center animated"></div>
-        <div id="word-bank" class="text-center animated"></div>
-        <div id="timer" class="text-center animated"></div>
-        <div id='finish' class="text-center animated"></div>
-        <div id="guess-div" class="text-center animated"></div>
-        
+        <div id="ingame-div">
+            <div id="start-div" class="animated">
+                <form id="start-form" class="text-center form-group">
+                    <button type="button" class="btn btn-primary">Start Game!</button>
+                </form>
+            </div>
+            <div id="instructions" class="text-center animated"></div>
+            <div id="word-div" class="animated text-center"></div>
+            <div id="timer" class="text-center animated"></div>
+            <div id='finish' class="text-center animated"></div>
+            
+        </div>
+
         <!--Game Layout Divs-->
         <div class="row">
             <div id = "chat-div" class="col-4 animated">
                 <div id="chat-box" class="border-box">
                     <div id="chat-messages"></div>
-                    <form id = "chat-form">
-                        <input type="text" id="chat-input" placeholder="Flaunt your friendliness...">
+                    <form id = "chat-form"  class="form-inline">
+                        <input type="text" id="chat-input" class="form-control"  placeholder="Flaunt your friendliness...">
                     </form>
                 </div>
             </div>
 
-            <div id="start-div" class="col-3 animated">
-                <form id="start-form" class="text-center">
-                    <button type="button">Start Game!</button>
-                </form>
-            </div>
-
-            <div id="word-div" class="col-3 animated"></div>
-
             <div id="drawing-board" class="col-6 animated">
-                <form id="avatar-form" class="text-center">
-                    <label class="label"><h2>Avatar:</h2></label><input type="text" id="avatar-input" placeholder="Enter Your Nickname">
-                    <button type="submit">Save</button>
+                <form id="avatar-form" class="form-inline">
+                    <input type="text" id="avatar-input" class="form-control" placeholder="Enter a Nickname:">
+                    <button type="submit" class="btn btn-success">Save</button>
                 </form>
+                <div id="guess-div" class="text-center animated"></div>
                 <div class="top-bar">
                     <button id="save-btn">Save</button>
                     <button id="undo-btn">Undo</button>

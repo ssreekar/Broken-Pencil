@@ -19,7 +19,7 @@ socket.on('user-connected', name=>{
     appendInfo(name + ' Connected')
 })
 
-socket.on('user-disconnected', name=>{
+socket.on('user-disconnected', ()=>{
     appendInfo(name + ' Disconnected')
 })
 
@@ -136,8 +136,6 @@ socket.on('game-starting', ()=>{
     })
 })
 
-
-
 function displayInstruction(current, deletePrevious){
     if (deletePrevious == true){
         instructionMessage = document.getElementById('instructionMessage')
@@ -158,7 +156,6 @@ function displayInstruction(current, deletePrevious){
 }
 
 // Draw Timer
-
 function finishedEvent(event){
     console.log(`Done ${event}`)
     timerText.parentNode.removeChild(timerText)
@@ -195,6 +192,7 @@ function createFinishButton(){
     finishButton = document.createElement('button')
     finishButton.setAttribute('id', 'finishButton')
     finishButton.innerText = 'Done!'
+    finishButton.classList.add('btn', 'btn-success')
     finish.append(finishButton)
     finishButton.addEventListener('click', ()=>{
         finishedEvent('drawing')
@@ -204,49 +202,23 @@ function createFinishButton(){
 socket.on('word-chosen', ()=>{
     wordDiv.style.display = 'none';
     displayInstruction('draw', false)
-    setupStartDraw()
+    setupDraw()
     createFinishButton()
-    startTimer(30, 'drawing')
+    startTimer(60, 'drawing')
 })
 
 socket.on('start-drawing', ()=>{
     displayInstruction('draw', true)
     createFinishButton()
-    startTimer(30, 'drawing')
+    startTimer(60, 'drawing')
 })
 
 // Guess drawing
-var guessedWord
-var guessForm = document.createElement('form')
-var guessTextBox = document.createElement('input') 
-var guessDiv = document.getElementById('guess-div')
-var submitGuess = document.createElement('button')
-function createGuessForm(){
-    guessForm.setAttribute('id', 'guessWord')
-    guessTextBox.setAttribute('type', 'text')
-    submitGuess.setAttribute('type', 'submit')
-    submitGuess.innerText = 'Enter'
-
-    guessDiv.append(guessForm)
-    guessForm.append(guessTextBox)
-    guessForm.append(submitGuess)
-
-    startTimer(15, 'guessing')
-    
-}
-
-guessForm.addEventListener('submit', e=>{
-    e.preventDefault()
-    guessedWord = guessTextBox.value;
-    console.log(`You guessed: ${guessedWord}`)
-    guessTextBox.value = ''
-    finishedEvent('guessing')
-})
 
 socket.on('start-guessing', ()=>{
     console.log('Start Guessing!')
     displayInstruction('guess', true)
-    createGuessForm()
+    setupGuess()
 })
 
 // Saved Image from Drawing is in draw.js

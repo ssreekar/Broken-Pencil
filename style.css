@@ -16,6 +16,10 @@ body {
     margin-left: 5px;
 }
 
+.btn{
+    margin: 5px;
+}
+
 .border-box{
     background-color: rgba(0, 0, 0, 0.3);
     border-style: solid;

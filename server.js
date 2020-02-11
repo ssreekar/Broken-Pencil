@@ -30,7 +30,7 @@ io.on("connection", socket => {
     })
 
     socket.on('disconnect', ()=>{
-        socket.to(globalLobby).emit('user-disconnected', users[socket.id])
+        socket.to(globalLobby).emit('user-disconnected')
         socket.leaveAll()
         delete users[socket.id]
         delete lobbies[socket.id]

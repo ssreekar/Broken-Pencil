@@ -1,7 +1,7 @@
 // Variables/Constants
 console.log('connected to game-layout')
 // Title
-const titleHeader = document.getElementById('title-div')
+const titleDiv = document.getElementById('title-div')
 const mainDiv = document.getElementById('main')
 const avatarForm = document.getElementById('avatar-form')
 const avatarInput = document.getElementById('avatar-input')
@@ -27,6 +27,14 @@ const header = document.getElementById('lobby-members')
 // Start Game
 const startDiv = document.getElementById('start-div')
 const startForm = document.getElementById('start-form')
+const ingameDiv = document.getElementById('ingame-div')
+
+// Guess drawing
+var guessedWord
+var guessForm = document.createElement('form')
+var guessTextBox = document.createElement('input') 
+var guessDiv = document.getElementById('guess-div')
+var submitGuess = document.createElement('button')
 
 // Word
 const wordDiv = document.getElementById('word-div')
@@ -53,9 +61,10 @@ function setupHomepage(){
     currentLobbyDiv.style.display = 'none'
     wordDiv.style.display = 'none'
     startDiv.style.display = 'none'
-    titleHeader.classList.add('bounceInDown')
-    titleHeader.addEventListener('animationend', ()=>
-    {titleHeader.classList.remove('bounceInDown')})
+    ingameDiv.style.display = 'none'
+    titleDiv.classList.add('bounceInDown')
+    titleDiv.addEventListener('animationend', ()=>
+    {titleDiv.classList.remove('bounceInDown')})
 
     lobbyDiv.classList.add('fadeIn', 'delay-1s')
     lobbyDiv.addEventListener('animationend', ()=>
@@ -63,9 +72,14 @@ function setupHomepage(){
 
     chatDiv.classList.remove('col-3')
     chatDiv.classList.add('col-4')
-    chatDiv.classList.remove('order-first')  
-    chatDiv.classList.add('order-last')
-    chatDiv.classList.add('slideInRight')
+    chatDiv.classList.add('slideInLeft')
+    chatDiv.addEventListener('animationend', ()=>
+    {chatDiv.classList.remove('slideInLeft')})  
+    /*
+    //chatDiv.classList.remove('order-first')  
+    //chatDiv.classList.add('order-last')
+    //chatDiv.classList.add('slideInRight')
+    
     chatDiv.addEventListener('animationend', ()=>
     {
         if(chatDiv.classList.contains('slideInLeft')){
@@ -75,6 +89,7 @@ function setupHomepage(){
             chatDiv.classList.remove('slideInRight')
         }
     })  
+    */
     lobbyForm.style.display = 'block'
 
     drawingBoard.classList.add('slideInUp')
@@ -86,6 +101,7 @@ function setupGamepage(){
     mainDiv.classList.remove('container')
     mainDiv.classList.add('container-fluid')
     startDiv.style.display = 'block'
+    ingameDiv.style.display = 'block'
 
     currentLobbyDiv.style.display = 'block'
     currentLobbyDiv.classList.add('bounceInRight')
@@ -94,14 +110,12 @@ function setupGamepage(){
 
     chatDiv.classList.remove('col-4')
     chatDiv.classList.add('col-3')
-    chatDiv.classList.remove('order-last')
-    chatDiv.classList.add('order-first')
+    //chatDiv.classList.remove('order-last')
+    //chatDiv.classList.add('order-first')
     chatDiv.classList.add('slideInLeft')
     avatarForm.style.display = 'none'
     lobbyForm.style.display = 'none'
     drawingBoard.style.display = 'none'
-    
-
 }
 
 function setupWordBank(){
@@ -109,7 +123,34 @@ function setupWordBank(){
     startDiv.style.display = 'none'
 }
 
-function setupStartDraw(){
+function setupDraw(){
+    titleDiv.style.display = 'none'
     drawingBoard.style.display = 'block'
     drawingBoard.classList.add('slideInUp')
+    chatDiv.classList.add('slideInLeft')
+    currentLobbyDiv.classList.add('bounceInRight')
+
 }
+
+function setupGuess(){
+    guessForm.setAttribute('id', 'guessWord')
+    guessForm.classList.add('form-inline')
+    guessTextBox.setAttribute('type', 'text')
+    guessTextBox.classList.add('form-control')
+    submitGuess.setAttribute('type', 'submit')
+    submitGuess.innerText = 'Enter Guess:'
+    submitGuess.classList.add('btn', 'btn-success')
+    guessDiv.append(guessForm)
+    guessForm.append(guessTextBox)
+    guessForm.append(submitGuess)
+
+    startTimer(20, 'guessing')   
+}
+
+guessForm.addEventListener('submit', e=>{
+    e.preventDefault()
+    guessedWord = guessTextBox.value;
+    console.log(`You guessed: ${guessedWord}`)
+    guessTextBox.value = ''
+    finishedEvent('guessing')
+})
