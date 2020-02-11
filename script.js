@@ -92,48 +92,42 @@ function clearCurrentMembers(){
     }
 }
 
-
 // start game
 startForm.addEventListener('click', ()=>{
     socket.emit('start-game', lobbyName)
-    setupWordBank()
-    displayInstruction('chooseWord')
     console.log('Start Requested')
 })
 
 // Word Selection
 
-
 socket.on('game-starting', ()=>{
     console.log('Game Start')
     appendInfo('Game is Starting!')
+    setupWordBank()
+    displayInstruction('chooseWord')
     if (wordDiv.style.display == 'none'){
         wordDiv.style.display = 'block'
     }
     generateWords()
     var easyBtn = document.getElementById('easy-btn')
     easyBtn.addEventListener('click', ()=>{
-        word = easyBtn.value
-        console.log(`You picked: ${word}`)
-        socket.emit('picked-word', word)
+        wordBtn = easyBtn.value
+        socket.emit('picked-word', wordBtn)
     })
     var mediumBtn = document.getElementById('medium-btn')
     mediumBtn.addEventListener('click', ()=>{
-        word = mediumBtn.value
-        console.log(`You picked: ${word}`)
-        socket.emit('picked-word', word)
+        wordBtn = mediumBtn.value
+        socket.emit('picked-word', wordBtn)
     })
     var hardBtn = document.getElementById('hard-btn')
     hardBtn.addEventListener('click', ()=>{
-        word = hardBtn.value
-        console.log(`You picked: ${word}`)
-        socket.emit('picked-word', word)
+        wordBtn = hardBtn.value
+        socket.emit('picked-word', wordBtn)
     })
     var veryHardBtn = document.getElementById('veryHard-btn')
     veryHardBtn.addEventListener('click', ()=>{
-        word = veryHardBtn.value
-        console.log(`You picked: ${word}`)
-        socket.emit('picked-word', word)
+        wordBtn = veryHardBtn.value
+        socket.emit('picked-word', wordBtn)
     })
 })
 
@@ -159,7 +153,6 @@ function finishedEvent(event){
     socket.emit('finished-event', event)
 }
 
-
 function startTimer(start, event){
     var timeLeft = start
     timerText.innerText = `Time Remaining: ${timeLeft}`
@@ -172,14 +165,16 @@ function startTimer(start, event){
     }, 1000)
 }
 
-socket.on('word-chosen', ()=>{
+socket.on('word-chosen', (newWord)=>{
+    word = newWord
     wordDiv.style.display = 'none';
     displayInstruction('draw')
     setupDraw()
     startTimer(60, 'drawing')
 })
 
-socket.on('start-drawing', ()=>{
+socket.on('start-drawing', (newWord)=>{
+    word = newWord
     displayInstruction('draw')
     setupDraw()
     startTimer(60, 'drawing')
@@ -191,6 +186,10 @@ socket.on('start-guessing', ()=>{
     displayInstruction('guess')
     setupGuess()
 })
+
+function sendGuess(guessedWord){
+    socket.emit('guessed-word', guessedWord)
+}
 
 // Saved Image from Drawing is in draw.js
 // Save Button Function is in init function

@@ -23,7 +23,6 @@ const currentLobbyDiv = document.getElementById('current-lobby-div')
 const currentLobbyBox = document.getElementById('current-lobby-box')
 const lobbyMembers = document.getElementById('lobby-members')
 
-
 // Start Game
 const startDiv = document.getElementById('start-div')
 const startForm = document.getElementById('start-form')
@@ -151,6 +150,7 @@ guessForm.addEventListener('submit', e=>{
     console.log(`You guessed: ${guessedWord}`)
     guessTextBox.value = ''
     finishedEvent('guessing')
+    sendGuess(guessedWord)
 })
 
 finishButton.addEventListener('click', ()=>{

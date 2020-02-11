@@ -47,25 +47,33 @@ io.on("connection", socket => {
         if (lobbyInfo){
             var i
             var names = new Array(lobbyInfo.length);
+            var userIds = Object.keys(lobbyInfo.sockets)
             for (i = 0; i < lobbyInfo.length; i++){
-                var theName = users[Object.keys(lobbyInfo.sockets)[i]]
+                if (i < lobbyInfo.length - 1){
+                    userNextPlayer[userIds[i]] = userIds[i+1]
+                }
+                else{
+                    userNextPlayer[userIds[i]] = userIds[0]
+                }
+                var theName = users[userIds[i]]
                 names[i] = theName
             }
             io.in(lobbies[socket.id]).emit('current-lobby-members', names)
-            console.log(names)
          }
     })
     // Start Game
-    user_words = {}
-
+    // We can maybe collapse these down later on...
+    userNextPlayer = {} // stores key: player id, value: next player id
+    userCurrentData = {} // stores key: player id, value: current drawing/guessed word
+    userStatus = {} // stores key: player id, value: boolean if done task
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
         console.log(`Game starting in ${lobbyName}`)
     })
 
     socket.on('picked-word', word=>{
-        user_words[socket.id] = word
-        socket.emit('word-chosen')
+        userCurrentData[socket.id] = word
+        socket.emit('word-chosen', word)
     })
 
     socket.on('finished-event', (event)=>{
@@ -73,9 +81,14 @@ io.on("connection", socket => {
             socket.emit('start-guessing')
         }
         else if (event == 'guessing'){
-            socket.emit('start-drawing')
-        }
-        
+            socket.emit('start-drawing', userCurrentData[socket.id])
+        }        
+    })
+
+    socket.on('guessed-word', (guessedWord)=>{
+        var nextPlayer = userNextPlayer[socket.id]
+        userCurrentData[nextPlayer] = guessedWord
+        console.log(`${users[socket.id]} sent ${users[nextPlayer]} the word ${guessedWord}`)
     })
 })
 
