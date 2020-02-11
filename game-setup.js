@@ -22,7 +22,7 @@ const lobbyInput = document.getElementById('lobby-input')
 const currentLobbyDiv = document.getElementById('current-lobby-div')
 const currentLobbyBox = document.getElementById('current-lobby-box')
 const lobbyMembers = document.getElementById('lobby-members')
-const header = document.getElementById('lobby-members')
+
 
 // Start Game
 const startDiv = document.getElementById('start-div')

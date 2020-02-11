@@ -57,7 +57,7 @@ body {
 
 #chat-messages {
     overflow: auto;
-    max-height: 30vh;
+    height: 30vh;
     display: flex;
     flex-direction: column-reverse;
 }

@@ -4,7 +4,7 @@ setupHomepage()
 var name = 'Guest'
 socket.emit('new-member', name)
 changeLobby('Global')
-appendInfo('You Joined')
+appendInfo('You Joined the Broken Pencil chat!')
 
 avatarForm.addEventListener('submit', e=>{
     e.preventDefault()
@@ -44,7 +44,8 @@ function appendInfo (info){
 lobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
     lobbyName = lobbyInput.value;
-    appendInfo('You Joined Lobby')
+    chatMsg.innerHTML = ''
+    appendInfo(`You Joined ${lobbyName}`)
     changeLobby(lobbyName)
     socket.emit('join-lobby', lobbyName)
     lobbyInput.value = ''
@@ -54,7 +55,7 @@ lobbyForm.addEventListener('submit', e=>{
 })
 
 //User Joined Lobby
-socket.on('user-joined-lobby', ()=>{
+socket.on('user-joined-lobby', (name)=>{
     appendInfo(name + ' Joined Lobby')
 })
 
@@ -67,7 +68,7 @@ function changeLobby(lobbyName){
 function addMember(memberName){
     const addition = document.createElement('h5')
     addition.innerHTML = memberName
-    header.append(addition)
+    lobbyMembers.append(addition)
 }
 
 // Display all Current Members
@@ -86,8 +87,8 @@ socket.on('current-lobby-members', listOfNames=>{
 
 //clears all the members of a lobby
 function clearCurrentMembers(){
-    while(!(header.childElementCount == 0)){
-        header.lastChild.remove()
+    while(!(lobbyMembers.childElementCount == 0)){
+        lobbyMembers.lastChild.remove()
     }
 }
 
@@ -185,7 +186,6 @@ socket.on('start-drawing', ()=>{
 })
 
 // Guess drawing
-
 socket.on('start-guessing', ()=>{
     console.log('Start Guessing!')
     displayInstruction('guess')

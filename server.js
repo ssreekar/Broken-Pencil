@@ -36,11 +36,9 @@ io.on("connection", socket => {
     socket.on('join-lobby', lobbyName=>{
         console.log(`${users[socket.id]} Joined ${lobbyName}`)
         socket.leaveAll(lobbies[socket.id])
-        socket.to(lobbies[socket.id]).emit('user-check-name')
         socket.join(lobbyName)
         lobbies[socket.id] = lobbyName
-        socket.to(lobbies[socket.id]).emit('user-joined-lobby')
-        socket.to(lobbies[socket.id]).emit('user-check-name')
+        socket.to(lobbies[socket.id]).emit('user-joined-lobby', users[socket.id])
     })
 
     // Current Members
@@ -53,7 +51,8 @@ io.on("connection", socket => {
                 var theName = users[Object.keys(lobbyInfo.sockets)[i]]
                 names[i] = theName
             }
-            socket.emit('current-lobby-members', names)
+            io.in(lobbies[socket.id]).emit('current-lobby-members', names)
+            console.log(names)
          }
     })
     // Start Game
