@@ -2,10 +2,13 @@ const socket = io('http://localhost:3000')
 setupHomepage()
 
 var name = 'Guest'
+socket.emit('new-member', name)
+
 avatarForm.addEventListener('submit', e=>{
     e.preventDefault()
-    name = avatarInput.value
-    socket.emit('new-member', name)
+    if (avatarInput.value.length == 0){name = 'Guest'}
+    else{name = avatarInput.value}
+    socket.emit('new-name', name)
     appendInfo('You Joined')
     changeLobby('Global')
     avatarInput.value = ''
@@ -50,12 +53,8 @@ lobbyForm.addEventListener('submit', e=>{
 })
 
 //User Joined Lobby
-socket.on('user-joined-lobby', userName=>{
-    appendInfo(userName + ' Joined Lobby')
-})
-
-socket.on('user-check-name', ()=>{
-    displayCurrentMembers()
+socket.on('user-joined-lobby', ()=>{
+    appendInfo(name + ' Joined Lobby')
 })
 
 //Current Lobby Function

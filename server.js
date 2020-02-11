@@ -17,16 +17,12 @@ io.on("connection", socket => {
     })
 
     socket.on('new-member', name=>{
-        if (Object.values(users).indexOf(name) > -1) {
-            socket.emit('name-error')
-            socket.to(globalLobby).emit('user-list', name)
-        }
-        else{
-            users[socket.id] = name
-            socket.to(globalLobby).emit('user-connected', name)
-            socket.to(globalLobby).emit('user-list', name)
-            socket.to(globalLobby).emit('user-check-name', users[socket.id])
-        }
+        users[socket.id] = name
+        socket.to(globalLobby).emit('user-connected', name)
+    })
+
+    socket.on('new-name', name=>{
+        users[socket.id] = name
     })
 
     socket.on('disconnect', ()=>{
@@ -43,7 +39,7 @@ io.on("connection", socket => {
         socket.to(lobbies[socket.id]).emit('user-check-name')
         socket.join(lobbyName)
         lobbies[socket.id] = lobbyName
-        socket.to(lobbies[socket.id]).emit('user-joined-lobby', users[socket.id])
+        socket.to(lobbies[socket.id]).emit('user-joined-lobby')
         socket.to(lobbies[socket.id]).emit('user-check-name')
     })
 
