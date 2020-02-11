@@ -3,14 +3,14 @@ setupHomepage()
 
 var name = 'Guest'
 socket.emit('new-member', name)
+changeLobby('Global')
+appendInfo('You Joined')
 
 avatarForm.addEventListener('submit', e=>{
     e.preventDefault()
     if (avatarInput.value.length == 0){name = 'Guest'}
     else{name = avatarInput.value}
     socket.emit('new-name', name)
-    appendInfo('You Joined')
-    changeLobby('Global')
     avatarInput.value = ''
 })
   
@@ -135,36 +135,18 @@ socket.on('game-starting', ()=>{
     })
 })
 
-function displayInstruction(current, deletePrevious){
-    if (deletePrevious == true){
-        instructionMessage = document.getElementById('instructionMessage')
-        instructionMessage.parentNode.removeChild(instructionMessage)
-    }
-    else{
-        instructionMessage = document.createElement('h2')
-        instructionMessage.setAttribute('id', 'instructionMessage')
-    }
+function displayInstruction(current){
     if (current == 'draw'){
         instructionMessage.innerText = `Try to draw: ${word}`
-        instructions.append(instructionMessage)
     }
     else{
         instructionMessage.innerText = `Guess this drawing!`
-        instructions.append(instructionMessage)
     }
 }
 
 // Draw Timer
 function finishedEvent(event){
     console.log(`Done ${event}`)
-    timerText.parentNode.removeChild(timerText)
-    if (event == 'drawing'){
-        finishButton.parentNode.removeChild(finishButton)
-    }
-    else if (event == 'guessing'){
-        guessForm.parentNode.removeChild(guessForm)
-    }
-    
     clearInterval(countdown)
     socket.emit('finished-event', event)
 }
@@ -172,43 +154,26 @@ function finishedEvent(event){
 
 function startTimer(start, event){
     var timeLeft = start
-    timerText = document.createElement('h3')
     timerText.innerText = `Time Remaining: ${timeLeft}`
-    timer.append(timerText)
     countdown = setInterval(()=>{
         timeLeft -= 1
         timerText.innerText = `Time Remaining: ${timeLeft}`
-        timerText.parentNode.removeChild(timerText);
-        timer.append(timerText)
         if (timeLeft <= 0){
             finishedEvent(event)
         }
     }, 1000)
 }
 
-var finishButton
-function createFinishButton(){
-    finishButton = document.createElement('button')
-    finishButton.setAttribute('id', 'finishButton')
-    finishButton.innerText = 'Done!'
-    finishButton.classList.add('btn', 'btn-success')
-    finish.append(finishButton)
-    finishButton.addEventListener('click', ()=>{
-        finishedEvent('drawing')
-    })
-}
-
 socket.on('word-chosen', ()=>{
     wordDiv.style.display = 'none';
-    displayInstruction('draw', false)
+    displayInstruction('draw')
     setupDraw()
-    createFinishButton()
     startTimer(60, 'drawing')
 })
 
 socket.on('start-drawing', ()=>{
-    displayInstruction('draw', true)
-    createFinishButton()
+    displayInstruction('draw')
+    setupDraw()
     startTimer(60, 'drawing')
 })
 
@@ -216,7 +181,7 @@ socket.on('start-drawing', ()=>{
 
 socket.on('start-guessing', ()=>{
     console.log('Start Guessing!')
-    displayInstruction('guess', true)
+    displayInstruction('guess')
     setupGuess()
 })
 

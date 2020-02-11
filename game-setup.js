@@ -31,10 +31,10 @@ const ingameDiv = document.getElementById('ingame-div')
 
 // Guess drawing
 var guessedWord
-var guessForm = document.createElement('form')
-var guessTextBox = document.createElement('input') 
+var guessForm = document.getElementById('guess-form')
+var guessTextBox = document.getElementById('guess-text') 
 var guessDiv = document.getElementById('guess-div')
-var submitGuess = document.createElement('button')
+var submitGuess = document.getElementById('guess-button')
 
 // Word
 const wordDiv = document.getElementById('word-div')
@@ -45,15 +45,16 @@ const drawingBoard = document.getElementById('drawing-board')
 
 // Round Instructions
 const instructions = document.getElementById('instructions')
-var instructionMessage
+var instructionMessage = document.getElementById('instruction-message')
 
 // Timer
 const timer = document.getElementById('timer')
-var timerText
+var timerText = document.getElementById('timer-text')
 var countdown
 
-// Finish Round
-const finish = document.getElementById('finish')
+// Finish Drawing Button
+const finishDrawDiv = document.getElementById('finish-draw-div')
+const finishButton = document.getElementById('finish-button')
 
 function setupHomepage(){
     mainDiv.classList.remove('container-fluid')
@@ -95,6 +96,8 @@ function setupHomepage(){
     drawingBoard.classList.add('slideInUp')
     drawingBoard.addEventListener('animationend', ()=>
     {drawingBoard.classList.remove('slideInUp')})  
+
+    instructions.style.display = 'none'
 }
 
 function setupGamepage(){
@@ -116,6 +119,8 @@ function setupGamepage(){
     avatarForm.style.display = 'none'
     lobbyForm.style.display = 'none'
     drawingBoard.style.display = 'none'
+    guessDiv.style.display = 'none'
+    finishDrawDiv.style.display = 'none'
 }
 
 function setupWordBank(){
@@ -125,25 +130,18 @@ function setupWordBank(){
 
 function setupDraw(){
     titleDiv.style.display = 'none'
+    guessDiv.style.display = 'none'
     drawingBoard.style.display = 'block'
-    drawingBoard.classList.add('slideInUp')
-    chatDiv.classList.add('slideInLeft')
-    currentLobbyDiv.classList.add('bounceInRight')
-
+    //drawingBoard.classList.add('slideInUp')
+    //chatDiv.classList.add('slideInLeft')
+    //currentLobbyDiv.classList.add('bounceInRight')
+    instructions.style.display = 'block'
+    finishDrawDiv.style.display = 'block'
 }
 
 function setupGuess(){
-    guessForm.setAttribute('id', 'guessWord')
-    guessForm.classList.add('form-inline')
-    guessTextBox.setAttribute('type', 'text')
-    guessTextBox.classList.add('form-control')
-    submitGuess.setAttribute('type', 'submit')
-    submitGuess.innerText = 'Enter Guess:'
-    submitGuess.classList.add('btn', 'btn-success')
-    guessDiv.append(guessForm)
-    guessForm.append(guessTextBox)
-    guessForm.append(submitGuess)
-
+    finishDrawDiv.style.display = 'none'
+    guessDiv.style.display = 'block'
     startTimer(20, 'guessing')   
 }
 
@@ -153,4 +151,8 @@ guessForm.addEventListener('submit', e=>{
     console.log(`You guessed: ${guessedWord}`)
     guessTextBox.value = ''
     finishedEvent('guessing')
+})
+
+finishButton.addEventListener('click', ()=>{
+    finishedEvent('drawing')
 })

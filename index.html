@@ -34,11 +34,18 @@
                     <button type="button" class="btn btn-primary">Start Game!</button>
                 </form>
             </div>
-            <div id="instructions" class="text-center animated"></div>
+            <div id="instructions" class="text-center animated"><h2 id="instruction-message"></h2></div>
             <div id="word-div" class="animated text-center"></div>
-            <div id="timer" class="text-center animated"></div>
-            <div id='finish' class="text-center animated"></div>
-            
+            <div id="timer" class="text-center animated"><h3 id="timer-text"></h3></div>
+            <div id="guess-div" class="text-center animated">
+                <form id="guess-form" class="form-inline justify-content-center">
+                    <input id="guess-text" type="text" class="form-control" placeholder="Guess Word:">
+                    <button id="guess-button" class="btn btn-primary">Guess</button>
+                </form>
+            </div>
+            <div id='finish-draw-div' class="text-center animated">
+                <button id="finish-button" class="btn btn-primary">Done!</button>
+            </div>
         </div>
 
         <!--Game Layout Divs-->
@@ -57,7 +64,6 @@
                     <input type="text" id="avatar-input" class="form-control" placeholder="Enter a Nickname:">
                     <button type="submit" class="btn btn-success">Save</button>
                 </form>
-                <div id="guess-div" class="text-center animated"></div>
                 <div class="top-bar">
                     <button id="save-btn">Save</button>
                     <button id="undo-btn">Undo</button>
