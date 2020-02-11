@@ -49,6 +49,7 @@ lobbyForm.addEventListener('submit', e=>{
     socket.emit('join-lobby', lobbyName)
     lobbyInput.value = ''
     setupGamepage()
+    displayInstruction('startGame')
     displayCurrentMembers()
 })
 
@@ -59,7 +60,7 @@ socket.on('user-joined-lobby', ()=>{
 
 //Current Lobby Function
 function changeLobby(lobbyName){
-    currentLobby.innerHTML = 'Current Lobby: ' + lobbyName    
+    lobbyMembers.innerHTML = 'Members of: ' + lobbyName    
 }
 
 //Add Lobby Member
@@ -92,10 +93,10 @@ function clearCurrentMembers(){
 
 
 // start game
-
 startForm.addEventListener('click', ()=>{
     socket.emit('start-game', lobbyName)
     setupWordBank()
+    displayInstruction('chooseWord')
     console.log('Start Requested')
 })
 
@@ -139,8 +140,14 @@ function displayInstruction(current){
     if (current == 'draw'){
         instructionMessage.innerText = `Try to draw: ${word}`
     }
-    else{
+    else if (current == 'guess'){
         instructionMessage.innerText = `Guess this drawing!`
+    }
+    else if (current == 'chooseWord'){
+        instructionMessage.innerText = 'Choose a word to draw:'
+    }
+    else if (current == 'startGame'){
+        instructionMessage.innerText = 'Click start to play!'
     }
 }
 

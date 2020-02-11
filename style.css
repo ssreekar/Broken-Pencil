@@ -4,6 +4,15 @@ body {
     background-size: cover;
 }
 
+*{
+    font-family: 'Gloria Hallelujah', cursive;
+
+}
+
+#instruction-message{
+    font-weight: bolder;
+}
+
 #title-div{
     margin: 30px;
 }

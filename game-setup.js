@@ -21,7 +21,7 @@ const lobbyInput = document.getElementById('lobby-input')
 
 const currentLobbyDiv = document.getElementById('current-lobby-div')
 const currentLobbyBox = document.getElementById('current-lobby-box')
-const currentLobby = document.getElementById('current-lobby')
+const lobbyMembers = document.getElementById('lobby-members')
 const header = document.getElementById('lobby-members')
 
 // Start Game
@@ -121,6 +121,7 @@ function setupGamepage(){
     drawingBoard.style.display = 'none'
     guessDiv.style.display = 'none'
     finishDrawDiv.style.display = 'none'
+    instructions.style.display = 'block'
 }
 
 function setupWordBank(){
@@ -135,7 +136,6 @@ function setupDraw(){
     //drawingBoard.classList.add('slideInUp')
     //chatDiv.classList.add('slideInLeft')
     //currentLobbyDiv.classList.add('bounceInRight')
-    instructions.style.display = 'block'
     finishDrawDiv.style.display = 'block'
 }
 
