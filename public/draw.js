@@ -13,6 +13,7 @@ var canvas, ctx,
 function redraw () {
     ctx.clearRect(0, 0, canvas.width(), canvas.height());
     ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     for (var i = 0; i < strokes.length; i++) {
         var s = strokes[i];
         ctx.strokeStyle = s.color;

@@ -147,10 +147,10 @@ function setupGuess(){
 guessForm.addEventListener('submit', e=>{
     e.preventDefault()
     guessedWord = guessTextBox.value;
+    sendGuess(guessedWord)
     console.log(`You guessed: ${guessedWord}`)
     guessTextBox.value = ''
     finishedEvent('guessing')
-    sendGuess(guessedWord)
 })
 
 finishButton.addEventListener('click', ()=>{

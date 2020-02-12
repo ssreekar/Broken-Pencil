@@ -22,14 +22,15 @@ socket.on('user-connected', name=>{
     appendInfo(name + ' Connected')
 })
 
-socket.on('user-disconnected', ()=>{
-    appendInfo(name + ' Disconnected')
+socket.on('user-disconnected', userName=>{
+    appendInfo(userName + ' Disconnected')
+    displayCurrentMembers()
 })
 
 chatForm.addEventListener('submit', e =>{
     e.preventDefault()
     const message = chatInput.value
-    socket.emit('send-chat-message', {message, name})
+    socket.emit('send-chat-message', {message, name, lobbyName})
     appendInfo('You: ' + message)
     chatInput.value = ''
 })
@@ -43,12 +44,13 @@ function appendInfo (info){
 //Handling Join Lobby Input
 lobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
-    lobbyName = lobbyInput.value;
     chatMsg.innerHTML = ''
+    var newLobbyName = lobbyInput.value
+    socket.emit('join-lobby', {lobbyName, newLobbyName})
+    lobbyInput.value = ''
+    lobbyName = newLobbyName;
     appendInfo(`You Joined ${lobbyName}`)
     changeLobby(lobbyName)
-    socket.emit('join-lobby', lobbyName)
-    lobbyInput.value = ''
     setupGamepage()
     displayInstruction('startGame')
     displayCurrentMembers()
