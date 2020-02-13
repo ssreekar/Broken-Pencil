@@ -106,7 +106,7 @@ io.on("connection", socket => {
         }
         if (everybodyDone){
             console.log(`Everyone is done ${data.event}`)
-            var nextEvent
+            var nextEvent = ''
             if (data.event == 'drawing'){
                 nextEvent = 'start-guessing'
             }
@@ -115,7 +115,9 @@ io.on("connection", socket => {
                 socket.emit('start-drawing', userCurrentData[socket.id])
             }        
             for (var userId of lobbies[data.lobbyName]){
-                io.to(`${userId}`).emit(`${nextEvent}`, userCurrentData[userId])
+                let senderObj = {reciever: userId, eventName: nextEvent, curWord: userCurrentData[userId]}
+                io.in(data.lobbyName).emit('next-match', senderObj)
+                //io.to(`{socket.id}`).emit(nextEvent, userCurrentData[userId])
                 //This line below works fine
                 //socket.emit(`${nextEvent}`, userCurrentData[userId])
                 userStatus[userId] = false

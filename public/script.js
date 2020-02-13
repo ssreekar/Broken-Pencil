@@ -2,6 +2,8 @@ const socket = io('http://localhost:3000')
 setupHomepage()
 
 var name = 'Guest'
+let personalId = ''
+let numberRecieved = 0
 socket.emit('new-member', name)
 changeLobby('Global')
 appendInfo('You Joined the Broken Pencil chat!')
@@ -13,6 +15,11 @@ avatarForm.addEventListener('submit', e=>{
     socket.emit('new-name', name)
     avatarInput.value = ''
 })
+
+socket.on('connect', ()=>{
+    console.log(socket.id);
+    personalId = socket.id
+});
   
 socket.on('chat-message', data=>{
     appendInfo(data.name +': ' + data.message)
@@ -175,18 +182,48 @@ socket.on('word-chosen', (newWord)=>{
     startTimer(60, 'drawing')
 })
 
-socket.on('start-drawing', (newWord)=>{
+
+socket.on('next-match', (dataObj) => {
+    console.log("Next Match Event Recieved!")
+    if (dataObj.reciever == personalId) {
+        numberRecieved++
+        console.log("Count Recieve:" + numberRecieved)
+        if (dataObj.eventName == 'start-drawing') {
+            draw_start(dataObj.curWord)
+        } else if (dataObj.eventName == 'start-guessing') {
+            draw_guess(dataObj.curWord)
+        } else {
+            console.log ("Warning: Error recieved in next-match event, invalid data recieved")
+        }
+    }
+})
+
+// The reason i put get_drawing into a function is so
+// i could access it from outside the socket.on () block
+// ie. the 'next-match' event
+function draw_start (newWord) {
+    console.log("Start Drawing!")
     word = newWord
     displayInstruction('draw')
     setupDraw()
-    startTimer(60, 'drawing')
+    startTimer(60, 'drawing')    
+}
+
+// Start Drawing
+socket.on('start-drawing', (newWord)=>{
+    draw_start(newWord)
 })
 
-// Guess drawing
-socket.on('start-guessing', (newDrawing)=>{
+// Same logic as draw_start
+function draw_guess (newDrawing) {
     console.log('Start Guessing!')
     displayInstruction('guess')
     setupGuess()
+}
+
+// Guess drawing
+socket.on('start-guessing', (newDrawing)=>{
+    draw_guess(newDrawing)
 })
 
 function sendGuess(guessedWord){
