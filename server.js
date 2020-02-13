@@ -85,6 +85,9 @@ io.on("connection", socket => {
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
         console.log(`Game starting in ${lobbyName}`)
+        for (var userId of lobbies[lobbyName]){
+            userStatus[userId] = false
+        }
     })
 
     socket.on('picked-word', word=>{
@@ -92,13 +95,33 @@ io.on("connection", socket => {
         socket.emit('word-chosen', word)
     })
 
-    socket.on('finished-event', (event)=>{
-        if (event == 'drawing'){
-            socket.emit('start-guessing')
+    socket.on('finished-event', data=>{
+        var everybodyDone = true
+        userStatus[socket.id] = true
+        for (var userId of lobbies[data.lobbyName]){
+            if (userStatus[userId] == false){
+                everybodyDone = false
+                break
+            }
         }
-        else if (event == 'guessing'){
-            socket.emit('start-drawing', userCurrentData[socket.id])
-        }        
+        if (everybodyDone){
+            console.log(`Everyone is done ${data.event}`)
+            var nextEvent
+            if (data.event == 'drawing'){
+                nextEvent = 'start-guessing'
+            }
+            else if (data.event == 'guessing'){
+                nextEvent = 'start-drawing'
+                socket.emit('start-drawing', userCurrentData[socket.id])
+            }        
+            for (var userId of lobbies[data.lobbyName]){
+                io.to(`${userId}`).emit(`${nextEvent}`, userCurrentData[userId])
+                //This line below works fine
+                //socket.emit(`${nextEvent}`, userCurrentData[userId])
+                userStatus[userId] = false
+            }
+        }
+        
     })
 
     socket.on('guessed-word', (guessedWord)=>{

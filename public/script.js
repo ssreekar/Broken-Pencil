@@ -152,7 +152,7 @@ function displayInstruction(current){
 function finishedEvent(event){
     console.log(`Done ${event}`)
     clearInterval(countdown)
-    socket.emit('finished-event', event)
+    socket.emit('finished-event', {event, lobbyName})
 }
 
 function startTimer(start, event){
@@ -183,7 +183,7 @@ socket.on('start-drawing', (newWord)=>{
 })
 
 // Guess drawing
-socket.on('start-guessing', ()=>{
+socket.on('start-guessing', (newDrawing)=>{
     console.log('Start Guessing!')
     displayInstruction('guess')
     setupGuess()
