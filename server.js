@@ -6,6 +6,9 @@ users = {}
 lobbies = {}
 globalLobby = 'Global'
 lobbies[globalLobby] = []
+readyInformation = {}
+readyNumber = {}
+
 
 io.on("connection", socket => {
     console.log("New User Connection")
@@ -36,6 +39,22 @@ io.on("connection", socket => {
             userIndex = lobbies[key].indexOf(socket.id)
             if (userIndex >= 0){
                 lobbies[key].splice(userIndex, 1)
+                // Also remove ready information about person
+                let userReadied = 0
+                if (readyInformation[key] != null) {
+                    if (readyInformation[key][socket.id] != null && 
+                        readyInformation[key][socket.id]) {
+                        userReadied = 1
+                    }
+                    delete readyInformation[key][socket.id]
+                    
+                }
+                if (readyNumber[key] != null) {
+                    if (userReadied) {
+                        readyNumber[key]--  
+                    }
+                    console.log("New count for " + key + " is " + readyNumber[key])
+                }
                 break
             }
         }
@@ -50,22 +69,39 @@ io.on("connection", socket => {
     socket.on('join-lobby', data=>{
         
         console.log(`${users[socket.id]} Joined ${data.newLobbyName}`)
-        socket.leaveAll(data.lobbyName)
+        socket.leave(data.lobbyName)
+        // Deleting infomation in lobbies and readyInformation for old lobby
+        userIndex = lobbies[data.lobbyName].indexOf(socket.id)
+        if (userIndex >= 0) {
+            lobbies[data.lobbyName].splice(userIndex, 1)
+        } 
+
         socket.join(data.newLobbyName)
         socket.to(data.newLobbyName).emit('user-joined-lobby', users[socket.id])
         if (!(data.newLobbyName in lobbies)){
             lobbies[data.newLobbyName] = []
         }
         lobbies[data.newLobbyName].push(socket.id)
-
+        if (readyInformation[data.newLobbyName] == null) {
+            readyInformation[data.newLobbyName] = {}
+            readyInformation[data.newLobbyName][socket.id] = false
+            readyNumber[data.newLobbyName] = 0
+            console.log("Initialized information about " + data.newLobbyName)
+        } else {
+            readyInformation[data.newLobbyName][socket.id] = false
+        }
     })
 
     // Current Members
     socket.on('get-lobby-members', lobbyName=>{
         //var lobbyInfo = io.sockets.adapter.rooms[lobbyName]
         var names = []
+        let number = 0
         //var userIds = Object.keys(lobbyInfo.sockets)
-        for (var i = 0; i < lobbies[lobbyName].length; i++){
+        if (lobbies[lobbyName] != null) {
+            number = lobbies[lobbyName].length
+        }
+        for (var i = 0; i < number ; i++){
             if (i < lobbies[lobbyName].length - 1){
                 userNextPlayer[lobbies[lobbyName][i]] = lobbies[lobbyName][i+1]
             }
@@ -77,6 +113,15 @@ io.on("connection", socket => {
         io.in(lobbyName).emit('current-lobby-members', names)
          
     })
+
+
+    socket.on('get-numbers', name=>{
+        returnObj = {readied: readyNumber[name], members: lobbies[name].length}
+        socket.emit('get-number-return', returnObj)
+
+    })
+
+
     // Start Game
     // We can maybe collapse these down later on...
     userNextPlayer = {} // stores key: player id, value: next player id
@@ -124,6 +169,43 @@ io.on("connection", socket => {
             }
         }
         
+    })
+
+    socket.on('ready-up', (sender)=> {
+        console.log("Player Attempting to Ready")
+        if (readyInformation[sender.lobby][sender.userId] == null || 
+            !readyInformation[sender.lobby][sender.userId]) {
+            readyInformation[sender.lobby][sender.userId] = true
+            readyNumber[sender.lobby]++
+            io.in(sender.lobby).emit('someone-readied')
+        }
+    })
+
+    socket.on('ready-down', (sender)=> {
+        console.log("Player Attempting to Unready")
+        if (readyInformation[sender.lobby][sender.userId] == null ||
+            !readyInformation[sender.lobby][sender.userId]) {
+                console.log("Warning: Code should not be going here")
+                console.log("Server is attempting to unready a player that isn't ready")
+        }
+        else {
+            readyInformation[sender.lobby][sender.userId] = false
+            readyNumber[sender.lobby]--
+            io.in(sender.lobby).emit('someone-readied')   
+        }
+    })
+
+
+    // Determines if a given lobby should start
+    socket.on('should-start', (lobbyName)=> {
+        console.log("Determining if " + lobbyName + " should start")
+        if (readyInformation[lobbyName] != null && readyNumber[lobbyName] != null) {
+            if (readyNumber[lobbyName] == lobbies[lobbyName].length) {
+                socket.emit('should-start-return', true)
+            } else {
+                socket.emit('should-start-return', false)
+            }
+        }
     })
 
     socket.on('guessed-word', (guessedWord)=>{

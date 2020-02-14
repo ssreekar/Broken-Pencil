@@ -3,7 +3,9 @@ setupHomepage()
 
 var name = 'Guest'
 let personalId = ''
-let numberRecieved = 0
+let isReady = false
+let gameStart = false
+let numberRecieved = 0 // Debug purposes only, remove if needed
 socket.emit('new-member', name)
 changeLobby('Global')
 appendInfo('You Joined the Broken Pencil chat!')
@@ -53,6 +55,7 @@ lobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
     chatMsg.innerHTML = ''
     var newLobbyName = lobbyInput.value
+    isReady = false
     socket.emit('join-lobby', {lobbyName, newLobbyName})
     lobbyInput.value = ''
     lobbyName = newLobbyName;
@@ -60,11 +63,19 @@ lobbyForm.addEventListener('submit', e=>{
     changeLobby(lobbyName)
     setupGamepage()
     displayInstruction('startGame')
+    displayReadyMembers()
     displayCurrentMembers()
+})
+
+
+//Someone readied
+socket.on('someone-readied', ()=>{
+    displayReadyMembers()
 })
 
 //User Joined Lobby
 socket.on('user-joined-lobby', (name)=>{
+    displayReadyMembers()
     appendInfo(name + ' Joined Lobby')
 })
 
@@ -103,14 +114,27 @@ function clearCurrentMembers(){
 
 // start game
 startForm.addEventListener('click', ()=>{
-    socket.emit('start-game', lobbyName)
-    console.log('Start Requested')
+    if (isReady) {
+        isReady = false
+        socket.emit('ready-down', {userId: personalId, lobby: lobbyName})
+    } else {
+        isReady = true
+        socket.emit('ready-up', {userId: personalId, lobby: lobbyName})
+        socket.emit('should-start', lobbyName)
+        socket.on('should-start-return', (data)=>{
+            if (data){
+                socket.emit('start-game', lobbyName)
+            }
+        })
+    }
+    displayReadyMembers()
 })
 
 // Word Selection
 
 socket.on('game-starting', ()=>{
     console.log('Game Start')
+    turnOffReadyInfo()
     appendInfo('Game is Starting!')
     setupWordBank()
     displayInstruction('chooseWord')
@@ -153,6 +177,20 @@ function displayInstruction(current){
     else if (current == 'startGame'){
         instructionMessage.innerText = 'Click start to play!'
     }
+}
+
+function displayReadyMembers() {
+    if (!gameStart) {
+        socket.emit('get-numbers', lobbyName)
+        socket.on('get-number-return', (numbers)=>{
+            console.log("reached")
+            membersMessage.innerText = numbers.readied + ' players ready out of ' + numbers.members
+        })
+    }
+}
+
+function turnOffReadyInfo() { 
+    members.style.display = 'none'
 }
 
 // Draw Timer

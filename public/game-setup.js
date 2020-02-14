@@ -46,6 +46,10 @@ const drawingBoard = document.getElementById('drawing-board')
 const instructions = document.getElementById('instructions')
 var instructionMessage = document.getElementById('instruction-message')
 
+// Ready Messages
+const members = document.getElementById('members')
+let membersMessage = document.getElementById('members-message')
+
 // Timer
 const timer = document.getElementById('timer')
 var timerText = document.getElementById('timer-text')
@@ -97,6 +101,7 @@ function setupHomepage(){
     {drawingBoard.classList.remove('slideInUp')})  
 
     instructions.style.display = 'none'
+    members.style.display = 'none'
 }
 
 function setupGamepage(){
@@ -121,6 +126,7 @@ function setupGamepage(){
     guessDiv.style.display = 'none'
     finishDrawDiv.style.display = 'none'
     instructions.style.display = 'block'
+    members.style.display = 'block'
 }
 
 function setupWordBank(){
