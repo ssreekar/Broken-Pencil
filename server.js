@@ -66,7 +66,17 @@ io.on("connection", socket => {
     })
 
     //Joining lobbies
-    socket.on('join-lobby', data=>{
+    socket.on('check-lobby-exist', (data)=>{
+        console.log(`Check lobby exists. Action: ${data.action}`)
+        if (data.lobbyName in lobbies){
+            socket.emit('lobby-exists', {lobbyName: data.lobbyName, action: data.action})
+        }
+        else{
+            socket.emit('lobby-no-exist', {lobbyName: data.lobbyName, action: data.action})
+        }
+    })
+
+    socket.on('join-lobby', (data)=>{
         
         console.log(`${users[socket.id]} Joined ${data.newLobbyName}`)
         userStatus[socket.id] = false
@@ -76,13 +86,12 @@ io.on("connection", socket => {
         if (userIndex >= 0) {
             lobbies[data.lobbyName].splice(userIndex, 1)
         } 
-
-        socket.join(data.newLobbyName)
-        socket.to(data.newLobbyName).emit('user-joined-lobby', users[socket.id])
         if (!(data.newLobbyName in lobbies)){
             lobbies[data.newLobbyName] = []
         }
         lobbies[data.newLobbyName].push(socket.id)
+        socket.join(data.newLobbyName)
+        socket.to(data.newLobbyName).emit('user-joined-lobby', users[socket.id])
         if (readyInformation[data.newLobbyName] == null) {
             readyInformation[data.newLobbyName] = {}
             readyInformation[data.newLobbyName][socket.id] = false

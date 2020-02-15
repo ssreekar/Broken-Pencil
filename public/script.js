@@ -53,11 +53,41 @@ function appendInfo (info){
 //Handling Join Lobby Input
 lobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
+    socket.emit('check-lobby-exist', {lobbyName: lobbyInput.value, action: 'join'})
+})
+
+socket.on('lobby-no-exist', (data)=>{
+    console.log(`Lobby does not exist. Action: ${data.action}`)
+    if (data.action == 'create'){
+        console.log(`Created new lobby: ${data.lobbyName}`)
+        joinLobby(data.lobbyName)
+    } else{
+        lobbyInput.classList.add('is-invalid')
+    }
+})
+
+socket.on('lobby-exists', (data)=>{
+    if (data.action == 'join'){
+        console.log(`Joined existing lobby: ${data.lobbyName}`)
+        joinLobby(data.lobbyName)
+    } else{
+        newLobbyInput.classList.add('is-invalid')
+    }
+})
+
+createLobbyForm.addEventListener('submit', e=>{
+    e.preventDefault()
+    socket.emit('check-lobby-exist', {lobbyName: newLobbyInput.value, action: 'create'})    
+})
+
+//User Joined Lobby
+function joinLobby(lName){
     chatMsg.innerHTML = ''
-    var newLobbyName = lobbyInput.value
+    var newLobbyName = lName
     isReady = false
     socket.emit('join-lobby', {lobbyName, newLobbyName})
     lobbyInput.value = ''
+    newLobbyInput.value = ''
     lobbyName = newLobbyName;
     appendInfo(`You Joined ${lobbyName}`)
     changeLobby(lobbyName)
@@ -67,14 +97,8 @@ lobbyForm.addEventListener('submit', e=>{
     displayCurrentMembers()
     createWordButtons()
     setWordButtonListener()
-})
+}
 
-//Someone readied
-socket.on('someone-readied', ()=>{
-    displayReadyMembers()
-})
-
-//User Joined Lobby
 socket.on('user-joined-lobby', (name)=>{
     displayReadyMembers()
     appendInfo(name + ' Joined Lobby')
@@ -112,6 +136,11 @@ function clearCurrentMembers(){
         lobbyMembers.lastChild.remove()
     }
 }
+
+//Someone readied
+socket.on('someone-readied', ()=>{
+    displayReadyMembers()
+})
 
 //start game
 function setWordButtonListener(){
