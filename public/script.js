@@ -2,6 +2,7 @@ const socket = io('http://localhost:3000')
 setupHomepage()
 
 var name = 'Guest'
+var password = ''
 let personalId = ''
 let isReady = false
 let gameStart = false
@@ -59,7 +60,13 @@ lobbyForm.addEventListener('submit', e=>{
 socket.on('lobby-no-exist', (data)=>{
     console.log(`Lobby does not exist. Action: ${data.action}`)
     if (data.action == 'create'){
+        //native javascript version not working
+        //createLobbyModal.hide()
+        $('#create-lobby-modal').modal('hide')
         console.log(`Created new lobby: ${data.lobbyName}`)
+        if (password.length > 0){
+            socket.emit('set-lobby-password', {lobbyName: data.lobbyName, password})
+        }
         joinLobby(data.lobbyName)
     } else{
         lobbyInput.classList.add('is-invalid')
@@ -68,15 +75,39 @@ socket.on('lobby-no-exist', (data)=>{
 
 socket.on('lobby-exists', (data)=>{
     if (data.action == 'join'){
-        console.log(`Joined existing lobby: ${data.lobbyName}`)
-        joinLobby(data.lobbyName)
+        if (data.passwordProtected){
+            //native javascript version not working
+            //passwordModal.show()
+            $('#password-modal').modal('show')
+        } else{
+            console.log(`Joined existing lobby: ${data.lobbyName}`)
+            joinLobby(data.lobbyName)
+        }
     } else{
         newLobbyInput.classList.add('is-invalid')
     }
 })
 
+enterPasswordForm.addEventListener('submit', e=>{
+    e.preventDefault()
+    password = enterPasswordInput.value
+    socket.emit('enter-password', {lobbyName: lobbyInput.value, password})
+})
+
+socket.on('password-correct', ()=>{
+    //native javascript version not working
+    //passwordModal.hide()
+    $('#password-modal').modal('hide')
+    joinLobby(lobbyInput.value)
+})
+
+socket.on('password-incorrect', ()=>{
+    enterPasswordInput.classList.add('is-invalid')
+})
+
 createLobbyForm.addEventListener('submit', e=>{
     e.preventDefault()
+    password = lobbyPasswordInput.value
     socket.emit('check-lobby-exist', {lobbyName: newLobbyInput.value, action: 'create'})    
 })
 
@@ -85,7 +116,7 @@ function joinLobby(lName){
     chatMsg.innerHTML = ''
     var newLobbyName = lName
     isReady = false
-    socket.emit('join-lobby', {lobbyName, newLobbyName})
+    socket.emit('join-lobby', {lobbyName, newLobbyName, password})
     lobbyInput.value = ''
     newLobbyInput.value = ''
     lobbyName = newLobbyName;

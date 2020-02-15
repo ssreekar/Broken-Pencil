@@ -25,8 +25,14 @@ const lobbyMembers = document.getElementById('lobby-members')
 
 const createLobbyDiv = document.getElementById('create-lobby-div')
 const createLobbyForm = document.getElementById('create-lobby-form')
+var createLobbyModal = document.getElementById('create-lobby-modal')
 const newLobbyInput = document.getElementById('new-lobby-input')
 const lobbyPasswordInput = document.getElementById('lobby-password-input')
+const joinLobbyButton = document.getElementById('join-lobby-button')
+
+const enterPasswordForm = document.getElementById('enter-password-form')
+const enterPasswordInput = document.getElementById('enter-password-input')
+var passwordModal = document.getElementById('password-modal')
 
 // Start Game
 const ingameDiv = document.getElementById('ingame-div')
@@ -116,7 +122,7 @@ function setupGamepage(){
     mainDiv.classList.add('container-fluid')
     ingameDiv.style.display = 'block'
 
-    createLobbyDiv.style.display = 'none'
+    //createLobbyDiv.style.display = 'none'
     currentLobbyDiv.style.display = 'block'
     currentLobbyDiv.classList.add('bounceInRight')
     currentLobbyDiv.addEventListener('animationend', ()=>

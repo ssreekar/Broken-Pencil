@@ -4,6 +4,7 @@ users = {}
 
 // Lobby Id
 lobbies = {}
+lobbyPasswords = {}
 globalLobby = 'Global'
 lobbies[globalLobby] = []
 readyInformation = {}
@@ -68,16 +69,32 @@ io.on("connection", socket => {
     //Joining lobbies
     socket.on('check-lobby-exist', (data)=>{
         console.log(`Check lobby exists. Action: ${data.action}`)
+        let passwordProtected = data.lobbyName in lobbyPasswords
         if (data.lobbyName in lobbies){
-            socket.emit('lobby-exists', {lobbyName: data.lobbyName, action: data.action})
+            socket.emit('lobby-exists', {lobbyName: data.lobbyName, action: data.action, passwordProtected})
         }
         else{
             socket.emit('lobby-no-exist', {lobbyName: data.lobbyName, action: data.action})
         }
     })
 
+    socket.on('set-lobby-password', data=>{
+        console.log(`Set ${data.lobbyName} password to: ${data.password}`)
+        lobbyPasswords[data.lobbyName] = data.password
+    })
+
+    socket.on('enter-password', data=>{
+        console.log(`Entered: ${data.password}, Correct: ${lobbyPasswords[data.lobbyName]}`)
+        if (data.password == lobbyPasswords[data.lobbyName]){
+            console.log('Password is correct')
+            socket.emit('password-correct')
+        } else{
+            console.log('Password is incorrect')
+            socket.emit('password-incorrect')
+        }
+    })
+
     socket.on('join-lobby', (data)=>{
-        
         console.log(`${users[socket.id]} Joined ${data.newLobbyName}`)
         userStatus[socket.id] = false
         socket.leave(data.lobbyName)

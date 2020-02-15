@@ -20,22 +20,58 @@
         <div id="title-div" class="text-center animated">
             <img src="images/logo.png" height="150px" width="auto">
         </div>    
+        <div class="modal fade" id="password-modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Enter Password</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="enter-password-form">
+                        <div class="form-group text-center">
+                            <input type="text" id="enter-password-input" class="form-control" placeholder="Password">
+                            <button type="submit" class="btn btn-success">Join Lobby</button> 
+                            <div class="invalid-feedback">Incorrect Password</div>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
         <div id="lobby-div" class="text-center animated">
             <form id="lobby-form" class="form-inline">
                 <input type="text" id="lobby-input" class="form-control" placeholder="Enter Lobby Name:" required>
-                <button type="submit" class="btn btn-info">Join Lobby</button>
-                <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#create-lobby-div">Create Lobby</button>
+                <button id="join-lobby-button" type="submit" data-toggle="modal" class="btn btn-info">Join Lobby</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#create-lobby-modal">Create Lobby</button>
                 <div class="invalid-feedback">Lobby does not exist</div>
             </form>
         </div>
-        <div id="create-lobby-div" class="text-center animated collapse">
-            <form id="create-lobby-form" class="form-inline justify-content-center">
-                <input type="text" id="new-lobby-input" class="form-control" placeholder="Lobby Name:" required>
-                <div class="invalid-feedback">Lobby name taken</div>
-                <input type="text" id="lobby-password-input" class="form-control" placeholder="Password (Optional):">
-                <button type="submit" class="btn btn-success">Create</button> 
-            </form>
-        </div>
+        <div class="modal fade" id="create-lobby-modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Create Lobby</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="create-lobby-form">
+                        <div class="form-group text-center">
+                            <input type="text" id="new-lobby-input" class="form-control" placeholder="Lobby Name:" required>
+                            <div class="invalid-feedback">Lobby name taken</div>
+                            <input type="text" id="lobby-password-input" class="form-control" placeholder="Password (Optional):">
+                            <button type="submit" class="btn btn-success">Create</button> 
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        
     
         <!--In Game Divs-->
         <div id="ingame-div">
