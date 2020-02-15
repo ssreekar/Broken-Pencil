@@ -24,8 +24,6 @@ const currentLobbyBox = document.getElementById('current-lobby-box')
 const lobbyMembers = document.getElementById('lobby-members')
 
 // Start Game
-const startDiv = document.getElementById('start-div')
-const startForm = document.getElementById('start-form')
 const ingameDiv = document.getElementById('ingame-div')
 
 // Guess drawing
@@ -36,7 +34,12 @@ var guessDiv = document.getElementById('guess-div')
 var submitGuess = document.getElementById('guess-button')
 
 // Word
-const wordDiv = document.getElementById('word-div')
+var wordDiv = document.getElementById('word-div')
+var wordButtons = document.getElementsByClassName('word-button')
+var easyButton = document.getElementById('easy-btn')
+var mediumButton = document.getElementById('medium-btn')
+var hardButton = document.getElementById('hard-btn')
+var veryHardButton = document.getElementById('veryHard-btn')
 var word
 
 // Drawing Board
@@ -64,7 +67,6 @@ function setupHomepage(){
     mainDiv.classList.add('container')
     currentLobbyDiv.style.display = 'none'
     wordDiv.style.display = 'none'
-    startDiv.style.display = 'none'
     ingameDiv.style.display = 'none'
     titleDiv.classList.add('bounceInDown')
     titleDiv.addEventListener('animationend', ()=>
@@ -107,7 +109,6 @@ function setupHomepage(){
 function setupGamepage(){
     mainDiv.classList.remove('container')
     mainDiv.classList.add('container-fluid')
-    startDiv.style.display = 'block'
     ingameDiv.style.display = 'block'
 
     currentLobbyDiv.style.display = 'block'
@@ -127,17 +128,14 @@ function setupGamepage(){
     finishDrawDiv.style.display = 'none'
     instructions.style.display = 'block'
     members.style.display = 'block'
-}
-
-function setupWordBank(){
     wordDiv.style.display = 'block'
-    startDiv.style.display = 'none'
 }
 
 function setupDraw(){
     titleDiv.style.display = 'none'
     guessDiv.style.display = 'none'
     drawingBoard.style.display = 'block'
+    wordDiv.style.display = 'none'
     //drawingBoard.classList.add('slideInUp')
     //chatDiv.classList.add('slideInLeft')
     //currentLobbyDiv.classList.add('bounceInRight')
@@ -147,6 +145,7 @@ function setupDraw(){
 function setupGuess(){
     finishDrawDiv.style.display = 'none'
     guessDiv.style.display = 'block'
+    wordDiv.style.display = 'none'
     startTimer(20, 'guessing')   
 }
 

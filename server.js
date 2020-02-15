@@ -69,6 +69,7 @@ io.on("connection", socket => {
     socket.on('join-lobby', data=>{
         
         console.log(`${users[socket.id]} Joined ${data.newLobbyName}`)
+        userStatus[socket.id] = false
         socket.leave(data.lobbyName)
         // Deleting infomation in lobbies and readyInformation for old lobby
         userIndex = lobbies[data.lobbyName].indexOf(socket.id)
@@ -90,6 +91,7 @@ io.on("connection", socket => {
         } else {
             readyInformation[data.newLobbyName][socket.id] = false
         }
+        
     })
 
     // Current Members
@@ -130,17 +132,16 @@ io.on("connection", socket => {
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
         console.log(`Game starting in ${lobbyName}`)
-        for (var userId of lobbies[lobbyName]){
-            userStatus[userId] = false
-        }
+        
     })
 
     socket.on('picked-word', word=>{
         userCurrentData[socket.id] = word
-        socket.emit('word-chosen', word)
+        //socket.emit('word-chosen', word)
     })
 
     socket.on('finished-event', data=>{
+        console.log(`${users[socket.id]} finished ${data.event}`)
         var everybodyDone = true
         userStatus[socket.id] = true
         for (var userId of lobbies[data.lobbyName]){
@@ -155,16 +156,13 @@ io.on("connection", socket => {
             if (data.event == 'drawing'){
                 nextEvent = 'start-guessing'
             }
-            else if (data.event == 'guessing'){
+            else if (data.event == 'guessing' || data.event == 'picking-word'){
                 nextEvent = 'start-drawing'
-                socket.emit('start-drawing', userCurrentData[socket.id])
-            }        
+            }
+            console.log(`Everyone is ${nextEvent}`)        
             for (var userId of lobbies[data.lobbyName]){
                 let senderObj = {reciever: userId, eventName: nextEvent, curWord: userCurrentData[userId]}
                 io.in(data.lobbyName).emit('next-match', senderObj)
-                //io.to(`{socket.id}`).emit(nextEvent, userCurrentData[userId])
-                //This line below works fine
-                //socket.emit(`${nextEvent}`, userCurrentData[userId])
                 userStatus[userId] = false
             }
         }
@@ -181,6 +179,7 @@ io.on("connection", socket => {
         }
     })
 
+    /*
     socket.on('ready-down', (sender)=> {
         console.log("Player Attempting to Unready")
         if (readyInformation[sender.lobby][sender.userId] == null ||
@@ -194,7 +193,7 @@ io.on("connection", socket => {
             io.in(sender.lobby).emit('someone-readied')   
         }
     })
-
+*/
 
     // Determines if a given lobby should start
     socket.on('should-start', (lobbyName)=> {

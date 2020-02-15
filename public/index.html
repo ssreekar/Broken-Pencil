@@ -31,12 +31,12 @@
         <div id="ingame-div">
             <div id="instructions" class="text-center animated"><h2 id="instruction-message"></h2></div>
             <div id="members" class = "text-center animated"><h4 id="members-message"></h4></div>
-            <div id="start-div" class="animated">
-                <form id="start-form" class="text-center form-group">
-                    <button type="button" class="btn btn-primary">Ready!</button>
-                </form>
+            <div id="word-div" class="animated text-center">
+                <button id = "easy-btn" class="btn btn-primary word-button"></button>
+                <button id = "medium-btn" class="btn btn-primary word-button"></button>
+                <button id = "hard-btn" class="btn btn-primary word-button"></button>
+                <button id = "veryHard-btn" class="btn btn-primary word-button"></button>
             </div>
-            <div id="word-div" class="animated text-center"></div>
             <div id="timer" class="text-center animated"><h3 id="timer-text"></h3></div>
             <div id="guess-div" class="text-center animated">
                 <form id="guess-form" class="form-inline justify-content-center">
@@ -66,7 +66,6 @@
                     <button type="submit" class="btn btn-success">Save</button>
                 </form>
                 <div class="top-bar">
-                    <button id="save-btn">Save</button>
                     <button id="undo-btn">Undo</button>
                     <button id="clear-btn">Clear</button>
                     <input type="color" id="color-picker">
@@ -75,13 +74,13 @@
                 <div>
                     <canvas id="draw" width="500" height="350"></canvas>
                 </div>    
-            </div id="drawing-board">
+            </div>
            
             <div id="current-lobby-div" class="col animated">
                 <div id="current-lobby-box" class="border-box">
                     <h3 id = "lobby-members">Lobby Members:</h3>
                 </div>
-            </divid="current-lobby-div">
+            </div>
         </div>
     </div>
 </body>

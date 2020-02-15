@@ -65,8 +65,9 @@ lobbyForm.addEventListener('submit', e=>{
     displayInstruction('startGame')
     displayReadyMembers()
     displayCurrentMembers()
+    createWordButtons()
+    setWordButtonListener()
 })
-
 
 //Someone readied
 socket.on('someone-readied', ()=>{
@@ -112,56 +113,37 @@ function clearCurrentMembers(){
     }
 }
 
-// start game
-startForm.addEventListener('click', ()=>{
-    if (isReady) {
-        isReady = false
-        socket.emit('ready-down', {userId: personalId, lobby: lobbyName})
-    } else {
-        isReady = true
-        socket.emit('ready-up', {userId: personalId, lobby: lobbyName})
-        socket.emit('should-start', lobbyName)
-        socket.on('should-start-return', (data)=>{
-            if (data){
-                socket.emit('start-game', lobbyName)
-            }
+//start game
+function setWordButtonListener(){
+    for (let i = 0; i < wordButtons.length; i++) {
+        wordButtons[i].addEventListener('click', ()=>{
+            /*
+            if (isReady) {
+                isReady = false
+                socket.emit('ready-down', {userId: personalId, lobby: lobbyName})
+            } else {}
+                */
+            isReady = true
+            socket.emit('ready-up', {userId: personalId, lobby: lobbyName})
+            socket.emit('should-start', lobbyName)
+            socket.on('should-start-return', (data)=>{
+                if (data){
+                    socket.emit('start-game', lobbyName)
+                }
+            })
+            
+            displayReadyMembers()
+            finishedEvent('picking-word')
         })
     }
-    displayReadyMembers()
-})
+}
 
-// Word Selection
-
+// Word Selection/Game Start
 socket.on('game-starting', ()=>{
     console.log('Game Start')
     turnOffReadyInfo()
     appendInfo('Game is Starting!')
-    setupWordBank()
-    displayInstruction('chooseWord')
-    if (wordDiv.style.display == 'none'){
-        wordDiv.style.display = 'block'
-    }
-    generateWords()
-    var easyBtn = document.getElementById('easy-btn')
-    easyBtn.addEventListener('click', ()=>{
-        wordBtn = easyBtn.value
-        socket.emit('picked-word', wordBtn)
-    })
-    var mediumBtn = document.getElementById('medium-btn')
-    mediumBtn.addEventListener('click', ()=>{
-        wordBtn = mediumBtn.value
-        socket.emit('picked-word', wordBtn)
-    })
-    var hardBtn = document.getElementById('hard-btn')
-    hardBtn.addEventListener('click', ()=>{
-        wordBtn = hardBtn.value
-        socket.emit('picked-word', wordBtn)
-    })
-    var veryHardBtn = document.getElementById('veryHard-btn')
-    veryHardBtn.addEventListener('click', ()=>{
-        wordBtn = veryHardBtn.value
-        socket.emit('picked-word', wordBtn)
-    })
+    //setupWordBank()
 })
 
 function displayInstruction(current){
@@ -196,12 +178,11 @@ function turnOffReadyInfo() {
 // Draw Timer
 function finishedEvent(event){
     console.log(`Done ${event}`)
-    clearInterval(countdown)
     socket.emit('finished-event', {event, lobbyName})
 }
 
 function startTimer(start, event){
-    var timeLeft = start
+    let timeLeft = start
     timerText.innerText = `Time Remaining: ${timeLeft}`
     countdown = setInterval(()=>{
         timeLeft -= 1
@@ -211,15 +192,6 @@ function startTimer(start, event){
         }
     }, 1000)
 }
-
-socket.on('word-chosen', (newWord)=>{
-    word = newWord
-    wordDiv.style.display = 'none';
-    displayInstruction('draw')
-    setupDraw()
-    startTimer(60, 'drawing')
-})
-
 
 socket.on('next-match', (dataObj) => {
     console.log("Next Match Event Recieved!")
@@ -244,6 +216,7 @@ function draw_start (newWord) {
     word = newWord
     displayInstruction('draw')
     setupDraw()
+    clearInterval(countdown)
     startTimer(60, 'drawing')    
 }
 
@@ -256,6 +229,7 @@ socket.on('start-drawing', (newWord)=>{
 function draw_guess (newDrawing) {
     console.log('Start Guessing!')
     displayInstruction('guess')
+    clearInterval(countdown)
     setupGuess()
 }
 
@@ -268,5 +242,28 @@ function sendGuess(guessedWord){
     socket.emit('guessed-word', guessedWord)
 }
 
+function createWordButtons(){
+    generateWords()
+    var easyBtn = document.getElementById('easy-btn')
+    easyBtn.addEventListener('click', ()=>{
+        wordBtn = easyBtn.value
+        socket.emit('picked-word', wordBtn)
+    })
+    var mediumBtn = document.getElementById('medium-btn')
+    mediumBtn.addEventListener('click', ()=>{
+        wordBtn = mediumBtn.value
+        socket.emit('picked-word', wordBtn)
+    })
+    var hardBtn = document.getElementById('hard-btn')
+    hardBtn.addEventListener('click', ()=>{
+        wordBtn = hardBtn.value
+        socket.emit('picked-word', wordBtn)
+    })
+    var veryHardBtn = document.getElementById('veryHard-btn')
+    veryHardBtn.addEventListener('click', ()=>{
+        wordBtn = veryHardBtn.value
+        socket.emit('picked-word', wordBtn)
+    })
+}
 // Saved Image from Drawing is in draw.js
 // Save Button Function is in init function
