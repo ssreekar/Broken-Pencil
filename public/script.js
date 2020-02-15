@@ -153,11 +153,8 @@ function displayInstruction(current){
     else if (current == 'guess'){
         instructionMessage.innerText = `Guess this drawing!`
     }
-    else if (current == 'chooseWord'){
-        instructionMessage.innerText = 'Choose a word to draw:'
-    }
     else if (current == 'startGame'){
-        instructionMessage.innerText = 'Click start to play!'
+        instructionMessage.innerText = 'Choose a word to start:'
     }
 }
 
