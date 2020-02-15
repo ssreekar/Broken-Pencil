@@ -1,4 +1,6 @@
 var oCanvas = document.getElementById('draw');
+var cantDraw = false
+storedImage = ""
 var canvas, ctx,
     brush = {
         x: 0,
@@ -12,19 +14,27 @@ var canvas, ctx,
 
 function redraw () {
     ctx.clearRect(0, 0, canvas.width(), canvas.height());
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    for (var i = 0; i < strokes.length; i++) {
-        var s = strokes[i];
-        ctx.strokeStyle = s.color;
-        ctx.lineWidth = s.size;
-        ctx.beginPath();
-        ctx.moveTo(s.points[0].x, s.points[0].y);
-        for (var j = 0; j < s.points.length; j++) {
-            var p = s.points[j];
-            ctx.lineTo(p.x, p.y);
-        } 
-        ctx.stroke();
+    if (!cantDraw) {
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        for (var i = 0; i < strokes.length; i++) {
+            var s = strokes[i];
+            ctx.strokeStyle = s.color;
+            ctx.lineWidth = s.size;
+            ctx.beginPath();
+            ctx.moveTo(s.points[0].x, s.points[0].y);
+            for (var j = 0; j < s.points.length; j++) {
+                var p = s.points[j];
+                ctx.lineTo(p.x, p.y);
+            } 
+            ctx.stroke();
+        }
+    } else {
+        console.log("bruh")
+        console.log(storedImage)
+        var myImage = new Image();
+        myImage.src = storedImage;
+        ctx.drawImage(myImage, 0, 0);
     }
 }
 
@@ -99,6 +109,17 @@ function init () {
 }
 
 $(init);
+
+function getBaseImg() {
+    return canvas[0].toDataURL();
+}
+
+function displayPicture(baseImage) {
+    console.log("Display Picture");
+    cantDraw = true;
+    storedImage = baseImage;
+    
+}
 
 function getLeftOffset(curObj){
     var offset = 0

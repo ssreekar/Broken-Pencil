@@ -178,6 +178,11 @@ function finishedEvent(event){
     socket.emit('finished-event', {event, lobbyName})
 }
 
+finishButton.addEventListener('click', ()=>{
+    socket.emit('send-drawing', getBaseImg())
+    finishedEvent('drawing')
+})
+
 function startTimer(start, event){
     let timeLeft = start
     timerText.innerText = `Time Remaining: ${timeLeft}`
@@ -228,6 +233,7 @@ function draw_guess (newDrawing) {
     displayInstruction('guess')
     clearInterval(countdown)
     setupGuess()
+    displayPicture(newDrawing)
 }
 
 // Guess drawing

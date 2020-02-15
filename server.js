@@ -140,6 +140,7 @@ io.on("connection", socket => {
         //socket.emit('word-chosen', word)
     })
 
+
     socket.on('finished-event', data=>{
         console.log(`${users[socket.id]} finished ${data.event}`)
         var everybodyDone = true
@@ -211,6 +212,12 @@ io.on("connection", socket => {
         var nextPlayer = userNextPlayer[socket.id]
         userCurrentData[nextPlayer] = guessedWord
         console.log(`${users[socket.id]} sent ${users[nextPlayer]} the word ${guessedWord}`)
+    })
+
+    socket.on('send-drawing', drawing=> {
+        console.log(drawing)
+        var nextPlayer = userNextPlayer[socket.id]
+        userCurrentData[nextPlayer] = drawing
     })
 })
 

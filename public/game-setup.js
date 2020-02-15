@@ -146,7 +146,7 @@ function setupGuess(){
     finishDrawDiv.style.display = 'none'
     guessDiv.style.display = 'block'
     wordDiv.style.display = 'none'
-    startTimer(20, 'guessing')   
+    startTimer(20, 'guessing')
 }
 
 guessForm.addEventListener('submit', e=>{
@@ -158,6 +158,5 @@ guessForm.addEventListener('submit', e=>{
     finishedEvent('guessing')
 })
 
-finishButton.addEventListener('click', ()=>{
-    finishedEvent('drawing')
-})
+
+
