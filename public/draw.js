@@ -1,6 +1,6 @@
 var oCanvas = document.getElementById('draw');
-var cantDraw = false
-storedImage = ""
+var cantDraw = false;
+var storedImage = '';
 var canvas, ctx,
     brush = {
         x: 0,
@@ -30,12 +30,22 @@ function redraw () {
             ctx.stroke();
         }
     } else {
-        console.log("bruh")
-        console.log(storedImage)
-        var myImage = new Image();
-        myImage.src = storedImage;
-        ctx.drawImage(myImage, 0, 0);
+        // Don't worry this code looks sketch but its actually something js people do commonly
+        (async ()=>{
+            let thing = await compute_image();
+            ctx.drawImage(thing, 0, 0);
+        })()
     }
+}
+
+async function get_the_image() {
+    return storedImage;
+}
+
+async function compute_image() {
+    let newImage = new Image();
+    newImage.src = await get_the_image();
+    return newImage;
 }
 
 function init () {
@@ -118,7 +128,13 @@ function displayPicture(baseImage) {
     console.log("Display Picture");
     cantDraw = true;
     storedImage = baseImage;
-    
+    redraw();
+}
+
+function turnOffDisplay() {
+    cantDraw = false;
+    strokes = [];
+    redraw();
 }
 
 function getLeftOffset(curObj){

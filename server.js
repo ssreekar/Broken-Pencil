@@ -128,6 +128,7 @@ io.on("connection", socket => {
     // We can maybe collapse these down later on...
     userNextPlayer = {} // stores key: player id, value: next player id
     userCurrentData = {} // stores key: player id, value: current drawing/guessed word
+    userPreviousData = {} // stores key: player id, value: previous drawing/guessed word
     userStatus = {} // stores key: player id, value: boolean if done task
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
@@ -159,6 +160,17 @@ io.on("connection", socket => {
             }
             else if (data.event == 'guessing' || data.event == 'picking-word'){
                 nextEvent = 'start-drawing'
+                let number = 0
+                if (lobbies[data.lobbyName] != null) {
+                    number = lobbies[data.lobbyName].length
+                }
+                for (var i = 0; i < number; i++){
+                    let currId  = lobbies[data.lobbyName][i]
+                    let oldWord = userCurrentData[currId]
+                    let nextPlayer = userNextPlayer[currId]
+                    let nextNextPlayer = userNextPlayer[nextPlayer]
+                    userPreviousData[nextNextPlayer] = oldWord
+                }
             }
             console.log(`Everyone is ${nextEvent}`)        
             for (var userId of lobbies[data.lobbyName]){
@@ -212,12 +224,19 @@ io.on("connection", socket => {
         var nextPlayer = userNextPlayer[socket.id]
         userCurrentData[nextPlayer] = guessedWord
         console.log(`${users[socket.id]} sent ${users[nextPlayer]} the word ${guessedWord}`)
+        socket.emit('sent-info', 'guessing')
     })
 
     socket.on('send-drawing', drawing=> {
         console.log(drawing)
         var nextPlayer = userNextPlayer[socket.id]
         userCurrentData[nextPlayer] = drawing
+        socket.emit('sent-info', 'drawing')
+    })
+
+    socket.on('get-prev-data', userId =>{
+        console.log("Attempting to get previous data " + userPreviousData[userId])
+        socket.emit('prev-data-return', userPreviousData[userId])
     })
 })
 

@@ -178,21 +178,38 @@ function finishedEvent(event){
     socket.emit('finished-event', {event, lobbyName})
 }
 
+socket.on('sent-info', (event)=> {
+    finishedEvent(event)
+})
+
 finishButton.addEventListener('click', ()=>{
     socket.emit('send-drawing', getBaseImg())
-    finishedEvent('drawing')
 })
 
 function startTimer(start, event){
     let timeLeft = start
     timerText.innerText = `Time Remaining: ${timeLeft}`
     countdown = setInterval(()=>{
-        timeLeft -= 1
+        if (timeLeft > 0){
+            timeLeft -= 1
+        }
         timerText.innerText = `Time Remaining: ${timeLeft}`
         if (timeLeft <= 0){
-            finishedEvent(event)
+            if (event == 'drawing') {
+                socket.emit('send-drawing', getBaseImg())
+            } else {
+                sendPersonBehind()
+                guessTextBox.value = ''
+            }
         }
     }, 1000)
+}
+
+function sendPersonBehind() {
+    socket.emit('get-prev-data', personalId)
+    socket.on('prev-data-return', (data)=>{
+        sendGuess(data)
+    })
 }
 
 socket.on('next-match', (dataObj) => {
@@ -217,9 +234,10 @@ function draw_start (newWord) {
     console.log("Start Drawing!")
     word = newWord
     displayInstruction('draw')
+    turnOffDisplay()
     setupDraw()
     clearInterval(countdown)
-    startTimer(60, 'drawing')    
+    startTimer(60, 'drawing')
 }
 
 // Start Drawing
