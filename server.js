@@ -109,6 +109,7 @@ io.on("connection", socket => {
         lobbies[data.newLobbyName].push(socket.id)
         socket.join(data.newLobbyName)
         socket.to(data.newLobbyName).emit('user-joined-lobby', users[socket.id])
+        userChainedData[socket.id] = []
         if (readyInformation[data.newLobbyName] == null) {
             readyInformation[data.newLobbyName] = {}
             readyInformation[data.newLobbyName][socket.id] = false
@@ -168,7 +169,6 @@ io.on("connection", socket => {
         for (let i = 0; i < number; i++) {
             let userId = lobbies[lobbyName][i]
             userTotalData[userId] = []
-            userChainedData[userId] = []
             
         }
         
