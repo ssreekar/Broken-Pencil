@@ -169,7 +169,3 @@ guessForm.addEventListener('submit', e=>{
     guessTextBox.value = ''
     finishedEvent('guessing')
 })
-
-finishButton.addEventListener('click', ()=>{
-    finishedEvent('drawing')
-})
