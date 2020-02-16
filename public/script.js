@@ -238,16 +238,42 @@ function finishedEvent(event){
     socket.emit('finished-event', {event, lobbyName})
 }
 
+
+// The reason i have the sent-info function to call 
+// finishedEvent, instead of just doing it before
+// is because I need to wait for the information 
+// to be sent before i call continue the next event (otherwise the code info won't be 
+// stored and the next player won't know what to draw) As JS is asyncronous
+socket.on('sent-info', (event)=> {
+    finishedEvent(event)
+})
+
+finishButton.addEventListener('click', ()=>{
+    socket.emit('send-drawing', getBaseImg())
+})
+
 function startTimer(start, event){
     let timeLeft = start
     timerText.innerText = `Time Remaining: ${timeLeft}`
     countdown = setInterval(()=>{
-        timeLeft -= 1
-        timerText.innerText = `Time Remaining: ${timeLeft}`
-        if (timeLeft <= 0){
-            finishedEvent(event)
+        if (timeLeft > 0){
+            timeLeft -= 1
+            timerText.innerText = `Time Remaining: ${timeLeft}`
+            if (timeLeft == 0){
+                if (event == 'drawing') {
+                    socket.emit('send-drawing', getBaseImg())
+                } else if (event == 'guessing'){
+                    guessTextBox.value = ''
+                    sendPersonBehind()
+                }
+            }
         }
+        
     }, 1000)
+}
+
+function sendPersonBehind() {
+    socket.emit('getsend-prev-data', personalId)
 }
 
 socket.on('next-match', (dataObj) => {
@@ -272,9 +298,10 @@ function draw_start (newWord) {
     console.log("Start Drawing!")
     word = newWord
     displayInstruction('draw')
+    turnOffDisplay()
     setupDraw()
     clearInterval(countdown)
-    startTimer(60, 'drawing')    
+    startTimer(60, 'drawing')
 }
 
 // Start Drawing
@@ -288,6 +315,7 @@ function draw_guess (newDrawing) {
     displayInstruction('guess')
     clearInterval(countdown)
     setupGuess()
+    displayPicture(newDrawing)
 }
 
 // Guess drawing

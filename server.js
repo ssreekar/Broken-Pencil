@@ -154,17 +154,33 @@ io.on("connection", socket => {
     // We can maybe collapse these down later on...
     userNextPlayer = {} // stores key: player id, value: next player id
     userCurrentData = {} // stores key: player id, value: current drawing/guessed word
+    userPreviousData = {} // stores key: player id, value: word if no one wrote anything
+    userTotalData = {} // stores key: player id, value: previous drawings/guessed words
+    userHeadData = {} // stores key: player id, value: starting word for player
     userStatus = {} // stores key: player id, value: boolean if done task
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
         console.log(`Game starting in ${lobbyName}`)
+        let number = 0
+        if (lobbies[lobbyName] != null) {
+            number = lobbies[lobbyName].length
+        }
+        for (let i = 0; i < number; i++) {
+            let userId = lobbies[lobbyName][i]
+            userTotalData[userId] = []
+        }
         
     })
 
     socket.on('picked-word', word=>{
         userCurrentData[socket.id] = word
+        let nextPlayer = userNextPlayer[socket.id]
+        let nextNextPlayer = userNextPlayer[nextPlayer]
+        userPreviousData[nextNextPlayer] = word
+        userHeadData[socket.id] = word
         //socket.emit('word-chosen', word)
     })
+
 
     socket.on('finished-event', data=>{
         console.log(`${users[socket.id]} finished ${data.event}`)
@@ -233,10 +249,36 @@ io.on("connection", socket => {
         }
     })
 
-    socket.on('guessed-word', (guessedWord)=>{
+    // The reason this function exists is because i need to call 
+    // the code from 'guessed-word' and 'getsend-prev-data'
+    function doGuess(guessedWord) {
         var nextPlayer = userNextPlayer[socket.id]
+        let nextNextPlayer = userNextPlayer[nextPlayer]
+        userPreviousData[nextNextPlayer] = guessedWord
         userCurrentData[nextPlayer] = guessedWord
+        userTotalData[socket.id] = guessedWord
         console.log(`${users[socket.id]} sent ${users[nextPlayer]} the word ${guessedWord}`)
+        socket.emit('sent-info', 'guessing')
+    }
+
+    socket.on('guessed-word', (guessedWord)=>{
+        doGuess(guessedWord)
+    })
+
+    socket.on('send-drawing', drawing=> {
+        var nextPlayer = userNextPlayer[socket.id]
+        userCurrentData[nextPlayer] = drawing
+        userTotalData[socket.id] = drawing
+        socket.emit('sent-info', 'drawing')
+    })
+
+    function wordScamble(word) {
+        //
+    }
+
+    socket.on('getsend-prev-data', userId =>{
+        console.log("Attempting to get previous data " + userPreviousData[userId])
+        doGuess(userPreviousData[userId])
     })
 })
 
