@@ -296,20 +296,38 @@ io.on("connection", socket => {
 
 
 
-    function wordScamble(word) {
+    function wordScramble(word) {
+        word = word.toLowerCase()
         let visited = new Array(word.length)
         let finalWord = ''
         for (let i = 0; i < word.length; i++) {
             let number = Math.floor(Math.random() * (word.length - i))
-            for (let z = i; z < word.length; z++) {
-                
+            let currentValue = 0
+            for (let z = 0; z < word.length; z++) {
+                if (number > 0) {
+                    if (visited[z] == undefined) {
+                        number--
+                    }
+                } else {
+                    if (visited[z] == undefined) {
+                        currentValue = z
+                        break;
+                    }
+                }
             }
+            visited[currentValue] = true
+            let theChar = word.charAt(currentValue)
+            if (i == 0){
+                theChar = theChar.toUpperCase()
+            }
+            finalWord = finalWord + theChar
         }
+        return finalWord
     }
 
     socket.on('getsend-prev-data', userId =>{
         console.log("Attempting to get previous data " + userPreviousData[userId])
-        doGuess(userPreviousData[userId])
+        doGuess(wordScramble(userPreviousData[userId]))
     })
 })
 
