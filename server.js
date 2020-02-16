@@ -156,7 +156,7 @@ io.on("connection", socket => {
     userCurrentData = {} // stores key: player id, value: current drawing/guessed word
     userPreviousData = {} // stores key: player id, value: word if no one wrote anything
     userTotalData = {} // stores key: player id, value: previous drawings/guessed words
-    userHeadData = {} // stores key: player id, value: starting word for player
+    userChainedData = {} // stores key:player id, value: chain of drawings and guessed words
     userStatus = {} // stores key: player id, value: boolean if done task
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
@@ -168,16 +168,18 @@ io.on("connection", socket => {
         for (let i = 0; i < number; i++) {
             let userId = lobbies[lobbyName][i]
             userTotalData[userId] = []
+            userChainedData[userId] = []
+            
         }
         
     })
 
     socket.on('picked-word', word=>{
         userCurrentData[socket.id] = word
+        userChainedData[socket.id].push(word)
         let nextPlayer = userNextPlayer[socket.id]
         let nextNextPlayer = userNextPlayer[nextPlayer]
         userPreviousData[nextNextPlayer] = word
-        userHeadData[socket.id] = word
         //socket.emit('word-chosen', word)
     })
 
@@ -221,6 +223,26 @@ io.on("connection", socket => {
         }
     })
 
+    // Call this function when the round is over and 
+    // userTotalData[] is full so that it can accurately 
+    // create userChainedData
+    function compute_chain(lobbyName) {
+        let number = 0
+        if (lobbies[lobbyName] != null) {
+            number = lobbies[lobbyName].length
+        }
+        let index = 1
+        for (let i = 0; i < number; i++) {
+            let userId = lobbies[lobbyName][i]
+            do {
+                userChainedData[userId].push(userTotalData[userId][index])
+                userId = userNextPlayer[userId]
+                index++
+            } while(userId != lobbies[lobbyName][i]);
+        }
+    }
+
+
     /*
     socket.on('ready-down', (sender)=> {
         console.log("Player Attempting to Unready")
@@ -256,7 +278,7 @@ io.on("connection", socket => {
         let nextNextPlayer = userNextPlayer[nextPlayer]
         userPreviousData[nextNextPlayer] = guessedWord
         userCurrentData[nextPlayer] = guessedWord
-        userTotalData[socket.id] = guessedWord
+        userTotalData[socket.id].push(guessedWord)
         console.log(`${users[socket.id]} sent ${users[nextPlayer]} the word ${guessedWord}`)
         socket.emit('sent-info', 'guessing')
     }
@@ -268,12 +290,21 @@ io.on("connection", socket => {
     socket.on('send-drawing', drawing=> {
         var nextPlayer = userNextPlayer[socket.id]
         userCurrentData[nextPlayer] = drawing
-        userTotalData[socket.id] = drawing
+        userTotalData[socket.id].push(drawing)
         socket.emit('sent-info', 'drawing')
     })
 
+
+
     function wordScamble(word) {
-        //
+        let visited = new Array(word.length)
+        let finalWord = ''
+        for (let i = 0; i < word.length; i++) {
+            let number = Math.floor(Math.random() * (word.length - i))
+            for (let z = i; z < word.length; z++) {
+                
+            }
+        }
     }
 
     socket.on('getsend-prev-data', userId =>{
