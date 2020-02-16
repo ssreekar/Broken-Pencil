@@ -178,6 +178,12 @@ function finishedEvent(event){
     socket.emit('finished-event', {event, lobbyName})
 }
 
+
+// The reason i have the sent-info function to call 
+// finishedEvent, instead of just doing it before
+// is because I need to wait for the information 
+// to be sent before i call continue the next event (otherwise the code info won't be 
+// stored and the next player won't know what to draw) As JS is asyncronous
 socket.on('sent-info', (event)=> {
     finishedEvent(event)
 })
@@ -192,24 +198,22 @@ function startTimer(start, event){
     countdown = setInterval(()=>{
         if (timeLeft > 0){
             timeLeft -= 1
-        }
-        timerText.innerText = `Time Remaining: ${timeLeft}`
-        if (timeLeft <= 0){
-            if (event == 'drawing') {
-                socket.emit('send-drawing', getBaseImg())
-            } else {
-                sendPersonBehind()
-                guessTextBox.value = ''
+            timerText.innerText = `Time Remaining: ${timeLeft}`
+            if (timeLeft == 0){
+                if (event == 'drawing') {
+                    socket.emit('send-drawing', getBaseImg())
+                } else if (event == 'guessing'){
+                    guessTextBox.value = ''
+                    sendPersonBehind()
+                }
             }
         }
+        
     }, 1000)
 }
 
 function sendPersonBehind() {
-    socket.emit('get-prev-data', personalId)
-    socket.on('prev-data-return', (data)=>{
-        sendGuess(data)
-    })
+    socket.emit('getsend-prev-data', personalId)
 }
 
 socket.on('next-match', (dataObj) => {
