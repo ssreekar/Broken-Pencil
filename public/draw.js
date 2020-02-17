@@ -54,8 +54,8 @@ function init () {
     function mouseEvent (e) {
         brush.x = e.pageX - getLeftOffset(oCanvas);
         brush.y = e.pageY - getTopOffset(oCanvas);
-        console.log(getTopOffset(oCanvas))
-        console.log(getLeftOffset(oCanvas))
+        //console.log(getTopOffset(oCanvas))
+        //console.log(getLeftOffset(oCanvas))
 
         currentStroke.points.push({
             x: brush.x,

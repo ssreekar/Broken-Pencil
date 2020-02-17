@@ -110,6 +110,7 @@ io.on("connection", socket => {
         socket.join(data.newLobbyName)
         socket.to(data.newLobbyName).emit('user-joined-lobby', users[socket.id])
         userChainedData[socket.id] = []
+        userTotalData[socket.id] = []
         if (readyInformation[data.newLobbyName] == null) {
             readyInformation[data.newLobbyName] = {}
             readyInformation[data.newLobbyName][socket.id] = false
@@ -166,12 +167,13 @@ io.on("connection", socket => {
         if (lobbies[lobbyName] != null) {
             number = lobbies[lobbyName].length
         }
+        /*
         for (let i = 0; i < number; i++) {
             let userId = lobbies[lobbyName][i]
             userTotalData[userId] = []
             
         }
-        
+        */
     })
 
     socket.on('picked-word', word=>{
@@ -197,17 +199,34 @@ io.on("connection", socket => {
         if (everybodyDone){
             console.log(`Everyone is done ${data.event}`)
             var nextEvent = ''
-            if (data.event == 'drawing'){
+            if (userTotalData[socket.id].length == lobbies[data.lobbyName].length){
+                compute_chain(data.lobbyName)
+                nextEvent = 'game-finished'
+            }
+            else if (data.event == 'drawing'){
                 nextEvent = 'start-guessing'
             }
             else if (data.event == 'guessing' || data.event == 'picking-word'){
                 nextEvent = 'start-drawing'
             }
+            else{}
             console.log(`Everyone is ${nextEvent}`)        
-            for (var userId of lobbies[data.lobbyName]){
-                let senderObj = {reciever: userId, eventName: nextEvent, curWord: userCurrentData[userId]}
-                io.in(data.lobbyName).emit('next-match', senderObj)
-                userStatus[userId] = false
+
+            if (nextEvent == 'game-finished'){
+                let allChainedData = []
+                let allPlayerList = []
+                for (var userId of lobbies[data.lobbyName]){
+                    allChainedData.push(userChainedData[userId])
+                    allPlayerList.push(users[userId])
+                }
+                io.in(data.lobbyName).emit('game-finished', {allChainedData, allPlayerList})
+            }
+            else{
+                for (var userId of lobbies[data.lobbyName]){
+                    let senderObj = {reciever: userId, eventName: nextEvent, curWord: userCurrentData[userId]}
+                    io.in(data.lobbyName).emit('next-match', senderObj)
+                    userStatus[userId] = false
+                }
             }
         }
         
@@ -232,7 +251,7 @@ io.on("connection", socket => {
             number = lobbies[lobbyName].length
         }
         for (let i = 0; i < number; i++) {
-          let index = 1
+          let index = 0
           let initialId = lobbies[lobbyName][i]
           let userId = lobbies[lobbyName][i]
           do {

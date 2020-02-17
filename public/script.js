@@ -144,7 +144,7 @@ function changeLobby(lobbyName){
 function addMember(memberName){
     const addition = document.createElement('h5')
     addition.innerHTML = memberName
-    lobbyMembers.append(addition)
+    currentLobbyBox.append(addition)
 }
 
 // Display all Current Members
@@ -352,3 +352,11 @@ function createWordButtons(){
 }
 // Saved Image from Drawing is in draw.js
 // Save Button Function is in init function
+
+// Game Results
+
+socket.on('game-finished', data=>{
+    console.log('Game has finished!')
+    clearInterval(countdown)
+    setupResults(data)
+})

@@ -73,6 +73,11 @@ var countdown
 const finishDrawDiv = document.getElementById('finish-draw-div')
 const finishButton = document.getElementById('finish-button')
 
+// Final Results
+var finalResultsDiv = document.getElementById('final-results-div')
+var finalResultsInner = document.getElementById('final-results-inner')
+
+
 function setupHomepage(){
     mainDiv.classList.remove('container-fluid')
     mainDiv.classList.add('container')
@@ -115,6 +120,7 @@ function setupHomepage(){
 
     instructions.style.display = 'none'
     members.style.display = 'none'
+    finalResultsDiv.style.display = 'none'
 }
 
 function setupGamepage(){
@@ -168,3 +174,70 @@ guessForm.addEventListener('submit', e=>{
     console.log(`You guessed: ${guessedWord}`)
     guessTextBox.value = ''
 })
+
+
+function setupResults(data){
+    drawingBoard.style.display = 'none'
+    titleDiv.style.display = 'block'
+    finalResultsDiv.style.display = 'block'
+    timer.style.display = 'none'
+    instructions.style.display = 'none'
+    guessDiv.style.display = 'none'
+    finishDrawDiv.style.display = 'none'
+    makeMemberLinks(data)
+}
+
+function makeMemberLinks(data){
+    currentLobbyBox.innerHTML = ''
+    console.log(data.allChainedData)
+    for (let i = 0; i < data.allPlayerList.length; i++){
+        let memberName = data.allPlayerList[i]
+        currentLobbyBox.innerHTML += `
+            <button id="memberChain${i}" type="button" class="btn btn-link">${memberName}</button>
+        `
+    }
+    for (let i = 0; i < data.allPlayerList.length; i++){
+        let memberName = data.allPlayerList[i]
+        let memberChainLink = document.getElementById(`memberChain${i}`)
+        let modifiedPlayerList = data.allPlayerList.slice(i, data.allPlayerList.length).concat(data.allPlayerList.slice(0, i))
+        memberChainLink.addEventListener('click', ()=>{
+            console.log(`View ${memberName}'s chain`)
+            addCarousel(data.allChainedData[i], modifiedPlayerList)
+        })
+    }
+    addCarousel(data.allChainedData[0], data.allPlayerList)
+}
+
+
+function addCarousel(chain, players){
+    console.log(players)
+    finalResultsInner.innerHTML = `
+        <div id="starting-word-slide" class="carousel-item active">
+            <h2>${players[0]}'s starting word was: ${chain[0]}</h2>
+        </div>
+    `
+    for (let i = 1; i < chain.length; i++){
+        if (i % 2 == 1){
+            if (i < chain.length - 1){
+                finalResultsInner.innerHTML += `
+                    <div class="carousel-item">
+                        <h3>Drawn by: ${players[i-1]}</h3>
+                        <img src="${chain[i]}" width="auto" height="auto">
+                        <h3>${players[i]} guessed ${chain[i+1]}</h3>
+                    </div>
+                `
+            }
+            else{
+                finalResultsInner.innerHTML += `
+                    <div class="carousel-item">
+                        <h3>Drawn by: ${players[i-1]}</h3>
+                        <img src="${chain[i]}" width="auto" height="auto">
+                    </div>
+                `
+            }
+            
+        }    
+        
+    }
+    
+}
