@@ -231,14 +231,15 @@ io.on("connection", socket => {
         if (lobbies[lobbyName] != null) {
             number = lobbies[lobbyName].length
         }
-        let index = 1
         for (let i = 0; i < number; i++) {
-            let userId = lobbies[lobbyName][i]
-            do {
-                userChainedData[userId].push(userTotalData[userId][index])
-                userId = userNextPlayer[userId]
-                index++
-            } while(userId != lobbies[lobbyName][i]);
+          let index = 1
+          let initialId = lobbies[lobbyName][i]
+          let userId = lobbies[lobbyName][i]
+          do {
+              userChainedData[initialId].push(userTotalData[userId][index])
+              userId = userNextPlayer[userId]
+              index++
+          } while(userId != initialId);
         }
     }
 

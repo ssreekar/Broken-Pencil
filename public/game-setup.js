@@ -167,5 +167,4 @@ guessForm.addEventListener('submit', e=>{
     sendGuess(guessedWord)
     console.log(`You guessed: ${guessedWord}`)
     guessTextBox.value = ''
-    finishedEvent('guessing')
 })
