@@ -5,7 +5,7 @@
   "scripts": {
     "lite": "lite-server --port 10001",
     "devStart": "nodemon server.js",
-    "build": "node server.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
