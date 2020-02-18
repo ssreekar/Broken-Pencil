@@ -76,6 +76,7 @@ const finishButton = document.getElementById('finish-button')
 // Final Results
 var finalResultsDiv = document.getElementById('final-results-div')
 var finalResultsInner = document.getElementById('final-results-inner')
+var originalWord = document.getElementById('original-word')
 
 
 function setupHomepage(){
@@ -211,14 +212,21 @@ function makeMemberLinks(data){
 
 function addCarousel(chain, players){
     console.log(players)
-    finalResultsInner.innerHTML = `
-        <div id="starting-word-slide" class="carousel-item active">
-            <h2>${players[0]}'s starting word was: ${chain[0]}</h2>
-        </div>
-    `
+    let theName = players[0]
+    let theWord = chain[0]
+    originalWord.innerText = theName +"'s starting word was: " + theWord
     for (let i = 1; i < chain.length; i++){
         if (i % 2 == 1){
-            if (i < chain.length - 1){
+            if (i == 1){
+                finalResultsInner.innerHTML = `
+                    <div class="carousel-item active">
+                        <h3>Drawn by: ${players[i-1]}</h3>
+                        <img src="${chain[i]}" width="auto" height="auto">
+                        <h3>${players[i]} guessed ${chain[i+1]}</h3>
+                    </div>
+                `
+            }
+            else if (i < chain.length - 1){
                 finalResultsInner.innerHTML += `
                     <div class="carousel-item">
                         <h3>Drawn by: ${players[i-1]}</h3>

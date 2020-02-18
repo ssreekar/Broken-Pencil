@@ -17,6 +17,10 @@ body {
     margin: 30px;
 }
 
+#original-word{
+    text-align: center;
+}
+
 #lobby-div{
     margin: 15px;
 }
