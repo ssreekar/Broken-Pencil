@@ -368,3 +368,12 @@ socket.on('game-finished', data=>{
     clearInterval(countdown)
     setupResults(data)
 })
+
+playAgainButton.addEventListener('click', ()=>{
+    socket.emit('play-again', lobbyName)
+    displayInstruction('startGame')
+    displayReadyMembers()
+    displayCurrentMembers()
+    setupGamepage()
+    generateWords()
+})

@@ -176,6 +176,11 @@ io.on("connection", socket => {
         if (lobbies[lobbyName] != null) {
             number = lobbies[lobbyName].length
         }
+        // Resetting the ready information
+        readyNumber[lobbyName] = 0
+        for (let player of lobbies[lobbyName]){
+            readyInformation[lobbyName][player] = false
+        }
         /*
         for (let i = 0; i < number; i++) {
             let userId = lobbies[lobbyName][i]
@@ -227,6 +232,7 @@ io.on("connection", socket => {
                 for (var userId of lobbies[data.lobbyName]){
                     allChainedData.push(userChainedData[userId])
                     allPlayerList.push(users[userId])
+                    userStatus[userId] = false
                 }
                 io.in(data.lobbyName).emit('game-finished', {allChainedData, allPlayerList})
             }
@@ -357,6 +363,13 @@ io.on("connection", socket => {
     socket.on('getsend-prev-data', userId =>{
         console.log("Attempting to get previous data " + userPreviousData[userId])
         doGuess(wordScramble(userPreviousData[userId]))
+    })
+
+    socket.on('play-again', lobbyName=>{
+        userCurrentData[socket.id] = null
+        userPreviousData[socket.id] = [] 
+        userTotalData[socket.id] = []
+        userChainedData[socket.id] = []
     })
 })
 

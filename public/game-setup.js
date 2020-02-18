@@ -155,10 +155,12 @@ function setupGamepage(){
     wordDiv.style.display = 'block'
     leaveButtonsDiv.style.display = 'block'
     playAgainButton.style.display = 'none'
+    finalResultsDiv.style.display = 'none'
 }
 
 function setupDraw(){
     leaveButtonsDiv.style.display = 'none'
+    timer.style.display = 'block'
     titleDiv.style.display = 'none'
     guessDiv.style.display = 'none'
     drawingBoard.style.display = 'block'
@@ -199,7 +201,7 @@ function setupResults(data){
 }
 
 function makeMemberLinks(data){
-    currentLobbyBox.innerHTML = ''
+    currentLobbyBox.innerHTML = '<h3 id="lobby-members">Lobby Members:</h3>'
     console.log(data.allChainedData)
     for (let i = 0; i < data.allPlayerList.length; i++){
         let memberName = data.allPlayerList[i]
