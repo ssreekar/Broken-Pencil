@@ -252,10 +252,10 @@ function addCarousel(chain, players){
                     <div class="carousel-item">
                         <h3>Drawn by: ${players[i-1]}</h3>
                         <img src="${chain[i]}" width="auto" height="auto">
+                        <h3 style="visibility:hidden"> WHASLJSAKAJDKLASJdlkJ </h3>
                     </div>
                 `
             }
-            
         }    
         
     }
