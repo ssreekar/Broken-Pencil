@@ -120,14 +120,22 @@
                     <input type="text" id="avatar-input" class="form-control" placeholder="Enter a Nickname:">
                     <button type="submit" class="btn btn-success">Save</button>
                 </form>
-                <div class="top-bar">
-                    <button id="save-btn">Save</button>
-                    <button id="undo-btn">Undo</button>
-                    <button id="clear-btn">Clear</button>
-                    <input type="color" id="color-picker">
-                    <input type="range" id="brush-size" min="1" max="50" value="10">
-                </div>
                 <div>
+                    <ul id="top-bar" class="nav bg-primary nav-justified" style="padding:7px;">
+                        <li class ="nav-item" >
+                            <button id="undo-btn">Undo</button>
+                        </li>
+                        <li class ="nav-item" >
+                            <button id="clear-btn" >Clear</button> 
+                        </li>
+                        <li class ="nav-item">
+                            <input type="color" id="color-picker" >
+                        </li>
+                        <li class ="nav-item" style="padding:2px">
+                            <input type="range" id="brush-size" min="1" max="50" value="10">
+                        </li>
+                        
+                    </ul>
                     <canvas id="draw"></canvas>
                 </div>    
             </div>

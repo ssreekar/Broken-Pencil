@@ -115,6 +115,7 @@ function init () {
     });
 
     $('#clear-btn').click(function () {
+        resized = false;
         strokes = [];
         redraw();
     });
@@ -138,7 +139,7 @@ function changeBound(){
 async function getTemp(currImage) {
     tempImage = new Image();
     tempImage.src = await currImage;
-} 
+}
 
 $(window).resize(function() {
     (async ()=>{
