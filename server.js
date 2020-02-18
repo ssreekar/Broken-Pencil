@@ -15,6 +15,11 @@ readyInformation = {}
 readyNumber = {}
 lobbyStatus = {}
 
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
 
 io.on("connection", socket => {
     console.log("New User Connection")
