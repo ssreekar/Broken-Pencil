@@ -17,6 +17,8 @@ var canvas, ctx,
 
 function redraw () {
     ctx.clearRect(0, 0, canvas.width(), canvas.height());
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0,0, canvas.width(), canvas.height());
     if (resized){
         ctx.drawImage(tempImage, 0, 0, canvas.width(), canvas.height());
     }
@@ -58,6 +60,7 @@ function init () {
     canvas = $('#draw'); //same thing as getElementByID
     changeBound();
     ctx = canvas[0].getContext('2d');
+    redraw();
     function mouseEvent (e) {
         brush.x = e.pageX - getLeftOffset(oCanvas);
         brush.y = e.pageY - getTopOffset(oCanvas);

@@ -206,6 +206,7 @@ socket.on('game-starting', ()=>{
     changeBound()
     oldHeight = oCanvas.height
     oldWidth = oCanvas.width
+    redraw();
 
     //setupWordBank()
 })
