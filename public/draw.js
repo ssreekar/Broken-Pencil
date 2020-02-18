@@ -1,6 +1,9 @@
-var oCanvas = document.getElementById('draw');
+let oCanvas = document.getElementById('draw');
+let oldHeight = oCanvas.height;
+let oldWidth = oCanvas.width;
 var cantDraw = false;
-var storedImage = '';
+let tempImage = null;
+let resized = false;
 var canvas, ctx,
     brush = {
         x: 0,
@@ -14,6 +17,9 @@ var canvas, ctx,
 
 function redraw () {
     ctx.clearRect(0, 0, canvas.width(), canvas.height());
+    if (resized){
+        ctx.drawImage(tempImage, 0, 0, canvas.width(), canvas.height());
+    }
     if (!cantDraw) {
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -33,7 +39,7 @@ function redraw () {
         // Don't worry this code looks sketch but its actually something js people do commonly
         (async ()=>{
             let thing = await compute_image();
-            ctx.drawImage(thing, 0, 0);
+            ctx.drawImage(thing, 0, 0, canvas.width(), canvas.height());
         })()
     }
 }
@@ -50,6 +56,7 @@ async function compute_image() {
 
 function init () {
     canvas = $('#draw'); //same thing as getElementByID
+    changeBound();
     ctx = canvas[0].getContext('2d');
     function mouseEvent (e) {
         brush.x = e.pageX - getLeftOffset(oCanvas);
@@ -117,6 +124,29 @@ function init () {
         brush.size = this.value;
     });
 }
+
+function changeBound(){
+    let canWidth = drawingBoard.clientWidth * 0.95
+    let canHeight = canWidth * 0.5
+    oCanvas.height = canHeight
+    oCanvas.width = canWidth
+}
+
+async function getTemp(currImage) {
+    tempImage = new Image();
+    tempImage.src = await currImage;
+} 
+
+$(window).resize(function() {
+    (async ()=>{
+        resized = true;
+        strokes = [];
+        let currImage = canvas[0].toDataURL();
+        changeBound();
+        await getTemp(currImage);
+        redraw();
+    })()
+  });
 
 $(init);
 

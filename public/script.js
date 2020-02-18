@@ -203,6 +203,10 @@ socket.on('game-starting', ()=>{
     console.log('Game Start')
     turnOffReadyInfo()
     appendInfo('Game is Starting!')
+    changeBound()
+    oldHeight = oCanvas.height
+    oldWidth = oCanvas.width
+
     //setupWordBank()
 })
 
