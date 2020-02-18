@@ -41,9 +41,12 @@ socket.on('user-disconnected', userName=>{
 chatForm.addEventListener('submit', e =>{
     e.preventDefault()
     const message = chatInput.value
-    socket.emit('send-chat-message', {message, name, lobbyName})
-    appendInfo('You: ' + message)
-    chatInput.value = ''
+    if (message.length > 0){
+        socket.emit('send-chat-message', {message, name, lobbyName})
+        appendInfo('You: ' + message)
+        chatInput.value = ''
+    }
+    
 })
 
 function appendInfo (info){

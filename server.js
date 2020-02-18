@@ -9,12 +9,12 @@ globalLobby = 'Global'
 lobbies[globalLobby] = []
 readyInformation = {}
 readyNumber = {}
+lobbyStatus = {}
 
 
 io.on("connection", socket => {
     console.log("New User Connection")
     socket.join(globalLobby)
-    //lobbies[socket.id] = globalLobby
     lobbies[globalLobby].push(socket.id)
 
     socket.on('send-chat-message', data=>{
@@ -116,6 +116,7 @@ io.on("connection", socket => {
         } 
         if (!(data.newLobbyName in lobbies)){
             lobbies[data.newLobbyName] = []
+            lobbyStatus[data.newLobbyName] = false
         }
         lobbies[data.newLobbyName].push(socket.id)
         socket.join(data.newLobbyName)
@@ -174,6 +175,7 @@ io.on("connection", socket => {
     socket.on('start-game', lobbyName=>{
         io.in(lobbyName).emit('game-starting')
         console.log(`Game starting in ${lobbyName}`)
+        lobbyStatus[lobbyName] = true
         let number = 0
         if (lobbies[lobbyName] != null) {
             number = lobbies[lobbyName].length
