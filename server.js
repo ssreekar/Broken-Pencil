@@ -70,7 +70,9 @@ io.on("connection", socket => {
                 break
             }
         }
-        
+        if (lobbies[key].length == 0){
+            delete lobbies[key]
+        }
         socket.to(key).emit('user-disconnected', users[userId])
         console.log(`${users[userId]} left the lobby: ${key}`)
     }
