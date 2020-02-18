@@ -78,6 +78,9 @@ var finalResultsDiv = document.getElementById('final-results-div')
 var finalResultsInner = document.getElementById('final-results-inner')
 var originalWord = document.getElementById('original-word')
 
+var leaveButtonsDiv = document.getElementById('leave-buttons-div')
+var leaveLobbyButton = document.getElementById('leave-lobby-button')
+var playAgainButton = document.getElementById('play-again-button')
 
 function setupHomepage(){
     mainDiv.classList.remove('container-fluid')
@@ -114,7 +117,8 @@ function setupHomepage(){
     })  
     */
     lobbyForm.style.display = 'block'
-
+    avatarForm.style.display = 'flex'
+    drawingBoard.style.display = 'block'
     drawingBoard.classList.add('slideInUp')
     drawingBoard.addEventListener('animationend', ()=>
     {drawingBoard.classList.remove('slideInUp')})  
@@ -122,6 +126,7 @@ function setupHomepage(){
     instructions.style.display = 'none'
     members.style.display = 'none'
     finalResultsDiv.style.display = 'none'
+    leaveButtonsDiv.style.display = 'none'
 }
 
 function setupGamepage(){
@@ -148,9 +153,12 @@ function setupGamepage(){
     instructions.style.display = 'block'
     members.style.display = 'block'
     wordDiv.style.display = 'block'
+    leaveButtonsDiv.style.display = 'block'
+    playAgainButton.style.display = 'none'
 }
 
 function setupDraw(){
+    leaveButtonsDiv.style.display = 'none'
     titleDiv.style.display = 'none'
     guessDiv.style.display = 'none'
     drawingBoard.style.display = 'block'
@@ -186,6 +194,8 @@ function setupResults(data){
     guessDiv.style.display = 'none'
     finishDrawDiv.style.display = 'none'
     makeMemberLinks(data)
+    leaveButtonsDiv.style.display = 'block'
+    playAgainButton.style.display = 'block'
 }
 
 function makeMemberLinks(data){

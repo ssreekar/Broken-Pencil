@@ -32,22 +32,33 @@ io.on("connection", socket => {
     })
 
     socket.on('disconnect', ()=>{
+        leaveLobby(socket.id)
+        delete users[socket.id]
+        socket.leaveAll()
+    })
+
+    socket.on('leave-lobby', lobbyName=>{
+        leaveLobby(socket.id)
+        socket.leave(lobbyName)
+    })
+
+    function leaveLobby(userId){
         const lobbyKeys = Object.keys(lobbies)
         var userIndex
         // Removes user from the Lobby list
         for (var key of lobbyKeys){
             console.log(key)
-            userIndex = lobbies[key].indexOf(socket.id)
+            userIndex = lobbies[key].indexOf(userId)
             if (userIndex >= 0){
                 lobbies[key].splice(userIndex, 1)
                 // Also remove ready information about person
                 let userReadied = 0
                 if (readyInformation[key] != null) {
-                    if (readyInformation[key][socket.id] != null && 
-                        readyInformation[key][socket.id]) {
+                    if (readyInformation[key][userId] != null && 
+                        readyInformation[key][userId]) {
                         userReadied = 1
                     }
-                    delete readyInformation[key][socket.id]
+                    delete readyInformation[key][userId]
                     
                 }
                 if (readyNumber[key] != null) {
@@ -60,11 +71,9 @@ io.on("connection", socket => {
             }
         }
         
-        socket.to(key).emit('user-disconnected', users[socket.id])
-        console.log(`${users[socket.id]} left the lobby: ${key}`)
-        delete users[socket.id]
-        socket.leaveAll()
-    })
+        socket.to(key).emit('user-disconnected', users[userId])
+        console.log(`${users[userId]} left the lobby: ${key}`)
+    }
 
     //Joining lobbies
     socket.on('check-lobby-exist', (data)=>{

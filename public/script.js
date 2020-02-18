@@ -136,6 +136,15 @@ socket.on('user-joined-lobby', (name)=>{
     appendInfo(name + ' Joined Lobby')
 })
 
+// User Leave Lobby
+leaveLobbyButton.addEventListener('click', ()=>{
+    socket.emit('leave-lobby', lobbyName)
+    setupHomepage()
+    lobbyName = 'Global'
+    chatMsg.innerHTML = ''
+    appendInfo('You Joined the Broken Pencil chat!')
+})
+
 //Current Lobby Function
 function changeLobby(lobbyName){
     lobbyMembers.innerHTML = 'Members of: ' + lobbyName    
