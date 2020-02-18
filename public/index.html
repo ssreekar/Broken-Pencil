@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<head>
+    <title>Broken Pencil</title>
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script defer src="word-generator.js"></script>
+    <script defer src="game-setup.js"></script>
+    <script defer src="script.js"></script>
+    <script defer src="draw.js"></script>
+    
+    
+</head>
+<body>
+    <div id="main" class="container">
+        <div id="title-div" class="text-center animated">
+            <img src="images/logo.png" height="150px" width="auto">
+        </div>    
+        <div class="modal fade" id="password-modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Enter Password</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="enter-password-form">
+                        <div class="form-group">
+                            <label for="enter-password-input">Password</label>
+                            <input type="text" id="enter-password-input" class="form-control" placeholder="Enter password">
+                            <div class="invalid-feedback">Incorrect Password</div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Join Lobby</button> 
+                            </div>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div id="lobby-div" class="text-center animated">
+            <form id="lobby-form" class="form-inline">
+                <input type="text" id="lobby-input" class="form-control" placeholder="Enter Lobby Name:" required>
+                <button id="join-lobby-button" type="submit" data-toggle="modal" class="btn btn-info">Join Lobby</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#create-lobby-modal">Create Lobby</button>
+                <div class="invalid-feedback">Lobby does not exist</div>
+            </form>
+        </div>
+        <div class="modal fade" id="create-lobby-modal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                  <h4 class="modal-title">Create Lobby</h4>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form id="create-lobby-form">
+                        <div class="form-group">
+                            <label for="new-lobby-input">Lobby Name</label>
+                            <input type="text" id="new-lobby-input" class="form-control" placeholder="Enter name" required>
+                            <div class="invalid-feedback">Lobby name taken</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lobby-password-input">Password</label>
+                            <input type="text" id="lobby-password-input" class="form-control" placeholder="Enter password">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Create</button> 
+                            </div>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+    
+        <!--In Game Divs-->
+        <div id="ingame-div">
+            <div id="instructions" class="text-center animated"><h2 id="instruction-message"></h2></div>
+            <div id="members" class = "text-center animated"><h4 id="members-message"></h4></div>
+            <div id="word-div" class="animated text-center">
+                <button id = "easy-btn" class="btn btn-primary word-button"></button>
+                <button id = "medium-btn" class="btn btn-primary word-button"></button>
+                <button id = "hard-btn" class="btn btn-primary word-button"></button>
+                <button id = "veryHard-btn" class="btn btn-primary word-button"></button>
+            </div>
+            <div id="timer" class="text-center animated"><h3 id="timer-text"></h3></div>
+            <div id="guess-div" class="text-center animated">
+                <form id="guess-form" class="form-inline justify-content-center">
+                    <input id="guess-text" type="text" class="form-control" placeholder="Guess Word:">
+                    <button id="guess-button" class="btn btn-primary">Guess</button>
+                </form>
+            </div>
+            <div id='finish-draw-div' class="text-center animated">
+                <button id="finish-button" class="btn btn-primary">Done!</button>
+            </div>
+        </div>
+
+        <!--Game Layout Divs-->
+        <div class="row">
+            <div id = "chat-div" class="col-4 animated">
+                <div id="chat-box" class="border-box">
+                    <div id="chat-messages"></div>
+                    <form id = "chat-form"  class="form-inline">
+                        <input type="text" id="chat-input" class="form-control" autocomplete="off" placeholder="Flaunt your friendliness...">
+                    </form>
+                </div>
+            </div>
+
+            <div id="drawing-board" class="col-6 animated">
+                <form id="avatar-form" class="form-inline justify-content-center">
+                    <input type="text" id="avatar-input" class="form-control" placeholder="Enter a Nickname:">
+                    <button type="submit" class="btn btn-success">Save</button>
+                </form>
+                <div>
+                    <ul id="top-bar" class="nav bg-primary nav-justified" style="padding:7px;">
+                        <li class ="nav-item" >
+                            <button id="undo-btn">Undo</button>
+                        </li>
+                        <li class ="nav-item" >
+                            <button id="clear-btn" >Clear</button> 
+                        </li>
+                        <li class ="nav-item">
+                            <input type="color" id="color-picker" >
+                        </li>
+                        <li class ="nav-item" style="padding:2px">
+                            <input type="range" id="brush-size" min="1" max="50" value="10">
+                        </li>
+                        
+                    </ul>
+                    <canvas id="draw"></canvas>
+                </div>    
+            </div>
+
+            <div id="final-results-div" class="carousel slide col-6" data-ride="carousel">
+                <div>
+                    <h3 id="original-word"></h3>
+                </div>
+                <div id="final-results-inner" class="carousel-inner text-center"></div>
+                <a class="carousel-control-prev" href="#final-results-div" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#final-results-div" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+            </div>
+           
+            <div id="current-lobby-div" class="col animated">
+                <div id="current-lobby-box" class="border-box">
+                    <h3 id="lobby-members">Lobby Members:</h3>
+                </div>
+            </div>
+        </div>
+        <div id="leave-buttons-div">
+            <button id="play-again-button" type="button" class="btn btn-primary">Play Again!</button>
+            <button id="leave-lobby-button" type="button" class="btn btn-secondary">Leave Lobby</button>
+        </div>
+    </div>
+</body>

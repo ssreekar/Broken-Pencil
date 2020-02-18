@@ -4,8 +4,21 @@ body {
     background-size: cover;
 }
 
+*{
+    font-family: 'Gloria Hallelujah', cursive;
+
+}
+
+#instruction-message{
+    font-weight: bolder;
+}
+
 #title-div{
     margin: 30px;
+}
+
+#original-word{
+    text-align: center;
 }
 
 #lobby-div{
@@ -14,6 +27,10 @@ body {
 
 .label{
     margin-left: 5px;
+}
+
+.btn{
+    margin: 5px;
 }
 
 .border-box{
@@ -40,4 +57,36 @@ body {
     border: 2px solid black;
     width: auto;
     height: auto;
+}
+
+#chat-messages {
+    overflow: auto;
+    height: 30vh;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#chat-box {
+    bottom: 0;
+    position: absolute;
+    width: 90%;
+}
+
+#drawing-board{
+    width: 100%;
+    height: 100%;
+}
+
+#chat-input {
+    width: 100%;
+}
+
+.carousel-inner img #starting-word-slide{
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%);
 }
