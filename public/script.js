@@ -35,6 +35,7 @@ socket.on('user-connected', name=>{
 socket.on('user-disconnected', userName=>{
     appendInfo(userName + ' Disconnected')
     displayCurrentMembers()
+    displayReadyMembers()
 })
 
 chatForm.addEventListener('submit', e =>{
@@ -155,18 +156,11 @@ function displayCurrentMembers(){
 // Getting the User Members
 socket.on('current-lobby-members', listOfNames=>{
     var i;
-    clearCurrentMembers()
+    currentLobbyBox.innerHTML = `<h3 id="lobby-members">Lobby Members:</h3>`
     for (i = 0; i < listOfNames.length; i++){
         addMember(listOfNames[i])
     }
 })
-
-//clears all the members of a lobby
-function clearCurrentMembers(){
-    while(!(lobbyMembers.childElementCount == 0)){
-        lobbyMembers.lastChild.remove()
-    }
-}
 
 //Someone readied
 socket.on('someone-readied', ()=>{
