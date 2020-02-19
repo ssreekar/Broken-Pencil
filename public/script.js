@@ -145,6 +145,10 @@ leaveLobbyButton.addEventListener('click', ()=>{
     setupHomepage()
     lobbyName = 'Global'
     chatMsg.innerHTML = ''
+    cantDraw = false
+    strokes = []
+    tempImage = null
+    redraw()
     appendInfo('You Joined the Broken Pencil chat!')
 })
 
@@ -370,6 +374,15 @@ socket.on('game-finished', data=>{
     console.log('Game has finished!')
     clearInterval(countdown)
     setupResults(data)
+})
+
+playAgainButton.addEventListener('click', ()=>{
+    socket.emit('play-again', lobbyName)
+    displayInstruction('startGame')
+    displayReadyMembers()
+    displayCurrentMembers()
+    setupGamepage()
+    generateWords()
 })
 
 playAgainButton.addEventListener('click', ()=>{

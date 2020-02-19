@@ -15,8 +15,10 @@ lobbyStatus = {}
 io.on("connection", socket => {
     console.log("New User Connection")
     socket.join(globalLobby)
+    if (lobbies[globalLobby] == null) {
+        lobbies[globalLobby] = []
+    }
     lobbies[globalLobby].push(socket.id)
-
     socket.on('send-chat-message', data=>{
         socket.to(data.lobbyName).emit('chat-message', data)
         console.log(`${data.name} sent ${data.message} to lobby: ${data.lobbyName}`)
@@ -158,7 +160,11 @@ io.on("connection", socket => {
 
 
     socket.on('get-numbers', name=>{
-        returnObj = {readied: readyNumber[name], members: lobbies[name].length}
+        let saveNum = 0
+        if (lobbies[name] != null) {
+            saveNum = lobbies[name].length
+        }
+        returnObj = {readied: readyNumber[name], members: saveNum}
         socket.emit('get-number-return', returnObj)
 
     })
