@@ -146,6 +146,12 @@ $(document).ready(function() {
         setupHomepage()
         lobbyName = 'Global'
         chatMsg.innerHTML = ''
+        cantDraw = false
+        tempImage = null
+        strokes = []
+        brush.color = "#000000"
+        resized = false
+        redraw()
         appendInfo('You Joined the Broken Pencil chat!')
     })
 

@@ -76,26 +76,35 @@ function init () {
     }
 
     canvas.mousedown(function (e) {
-        brush.down = true;
+        let modifiedX = e.pageX - getLeftOffset(oCanvas);
+        let modifiedY = e.pageY - getTopOffset(oCanvas);
+        if (0 <= modifiedX && canvas.width() >= modifiedX &&
+            0 <= modifiedY && canvas.height() >= modifiedY) {
+            brush.down = true;
+            currentStroke = {
+                color: brush.color,
+                size: brush.size,
+                points: [],
+            };
+    
+            strokes.push(currentStroke);
+            mouseEvent(e);
+        } else {
+            brush.down = false;
+            mouseEvent(e);
+            currentStroke = null;
+        }
 
-        currentStroke = {
-            color: brush.color,
-            size: brush.size,
-            points: [],
-        };
-
-        strokes.push(currentStroke);
-
-        mouseEvent(e);
     }).mouseup(function (e) {
-        brush.down = false;
-
-        mouseEvent(e);
-
+        if (brush.down){
+            brush.down = false;
+            mouseEvent(e);
+        }
         currentStroke = null;
     }).mousemove(function (e) {
-        if (brush.down)
+        if (brush.down){
             mouseEvent(e);
+        }
     });
     $('#color-red').click(()=>{
         brush.color = '#FF0000';
