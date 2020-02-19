@@ -5,7 +5,7 @@ $(document).ready(function() {
     var name = 'Guest'
     var password = ''
     let personalId = ''
-    let isReady = false
+    let notSent = true
     let gameStart = false
     let numberRecieved = 0 // Debug purposes only, remove if needed
     socket.emit('new-member', name)
@@ -44,7 +44,7 @@ $(document).ready(function() {
         const message = chatInput.value
         if (message.length > 0){
             socket.emit('send-chat-message', {message, name, lobbyName})
-            appendInfo('You: ' + message)
+            appendInfo(`${name} (You): ` + message)
             chatInput.value = ''
         }
         
@@ -268,6 +268,7 @@ $(document).ready(function() {
 
     finishButton.addEventListener('click', ()=>{
         socket.emit('send-drawing', getBaseImg())
+        notSent = false
     })
 
     function startTimer(start, event){
@@ -275,9 +276,10 @@ $(document).ready(function() {
         timerText.innerText = `Time Remaining: ${timeLeft}`
         countdown = setInterval(()=>{
             if (timeLeft > 0){
+                console.log(`Status: ${notSent}`)
                 timeLeft -= 1
                 timerText.innerText = `Time Remaining: ${timeLeft}`
-                if (timeLeft == 0){
+                if (timeLeft <= 0 && notSent){
                     if (event == 'drawing') {
                         socket.emit('send-drawing', getBaseImg())
                     } else if (event == 'guessing'){
@@ -296,6 +298,7 @@ $(document).ready(function() {
 
     socket.on('next-match', (dataObj) => {
         console.log("Next Match Event Recieved!")
+        notSent = true
         if (dataObj.reciever == personalId) {
             numberRecieved++
             console.log("Count Recieve:" + numberRecieved)
@@ -322,10 +325,14 @@ $(document).ready(function() {
         startTimer(60, 'drawing')
     }
 
-    // Start Drawing
+    /*
+    // Start Drawing - No longer in use
     socket.on('start-drawing', (newWord)=>{
         draw_start(newWord)
+        notSent = true
+        console.log(`not sent set true`)
     })
+    */
 
     // Same logic as draw_start
     function draw_guess (newDrawing) {
@@ -337,17 +344,20 @@ $(document).ready(function() {
         displayPicture(newDrawing)
     }
 
-    // Guess drawing
+    /*
+    // Guess drawing - no longer in use
     socket.on('start-guessing', (newDrawing)=>{
         draw_guess(newDrawing)
+        notSent = true
     })
-
+    */
     guessForm.addEventListener('submit', e=>{
         e.preventDefault()
         guessedWord = guessTextBox.value;
         sendGuess(guessedWord)
         console.log(`You guessed: ${guessedWord}`)
         guessTextBox.value = ''
+        notSent = false
     })
     
     function sendGuess(guessedWord){
