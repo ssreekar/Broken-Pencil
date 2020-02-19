@@ -97,17 +97,34 @@ function init () {
         if (brush.down)
             mouseEvent(e);
     });
-
-    $('#save-btn').click(function () {
-        var artwork = canvas[0].toDataURL();
-        console.log(artwork);
-        //this commented part below is code to be copied when redrawing saved image!
-        //var art = document.createElement('img'); 
-        //art.src = artwork
-        //ctx.drawImage(art, 5, 5,);
-        // Temp Soln since current storage for game has yet to be decided on
-
+    $('#color-red').click(()=>{
+        brush.color = '#FF0000';
     });
+    $('#color-orange').click(()=>{
+        brush.color = '#FFA500';
+    });
+    $('#color-yellow').click(()=>{
+        brush.color = '#FFFF00';
+    });
+    $('#color-green').click(()=>{
+        brush.color = '#008000'
+    });
+    $('#color-blue').click(()=>{
+        brush.color = '#0000FF';
+    });
+    $('#color-purple').click(()=>{
+        brush.color = '#800080';
+    });
+    $('#color-brown').click(()=>{
+        brush.color = '#8B4513';
+    });
+    $('#color-white').click(()=>{
+        brush.color = '#FFFFFF';
+    });
+    $('#color-black').click(()=>{
+        brush.color = '#000000';
+    });
+
 
     $('#undo-btn').click(function () {
         strokes.pop();
@@ -120,9 +137,6 @@ function init () {
         redraw();
     });
 
-    $('#color-picker').on('input', function () {
-        brush.color = this.value;
-    });
 
     $('#brush-size').on('input', function () {
         brush.size = this.value;
