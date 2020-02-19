@@ -233,7 +233,7 @@ io.on("connection", socket => {
         if (everybodyDone){
             console.log(`Everyone is done ${data.event}`)
             var nextEvent = ''
-            if (userTotalData[socket.id].length == lobbies[data.lobbyName].length){
+            if (userTotalData[socket.id].length >= lobbies[data.lobbyName].length){
                 compute_chain(data.lobbyName)
                 nextEvent = 'game-finished'
             }
