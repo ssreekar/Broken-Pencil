@@ -79,7 +79,7 @@ io.on("connection", socket => {
                 break
             }
         }
-        if (lobbies[key].length == 0){
+        if (lobbies[key].length == 0 && key != globalLobby){
             delete lobbies[key]
         }
         socket.to(key).emit('user-disconnected', users[userId])
