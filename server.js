@@ -191,16 +191,19 @@ io.on("connection", socket => {
         io.in(lobbyName).emit('game-starting')
         console.log(`Game starting in ${lobbyName}`)
         lobbyStatus[lobbyName] = true
+        
+        // Resetting the ready/totalData information
+        readyNumber[lobbyName] = 0
+        for (let player of lobbies[lobbyName]){
+            readyInformation[lobbyName][player] = false
+            userTotalData[player] = []
+        }
+
+        /*
         let number = 0
         if (lobbies[lobbyName] != null) {
             number = lobbies[lobbyName].length
         }
-        // Resetting the ready information
-        readyNumber[lobbyName] = 0
-        for (let player of lobbies[lobbyName]){
-            readyInformation[lobbyName][player] = false
-        }
-        /*
         for (let i = 0; i < number; i++) {
             let userId = lobbies[lobbyName][i]
             userTotalData[userId] = []

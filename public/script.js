@@ -214,6 +214,8 @@ $(document).ready(function() {
     // Word Selection/Game Start
     socket.on('game-starting', ()=>{
         console.log('Game Start')
+        setupDraw()
+        displayInstruction('draw')
         turnOffReadyInfo()
         appendInfo('Game is Starting!')
         changeBound()
@@ -234,14 +236,24 @@ $(document).ready(function() {
         else if (current == 'startGame'){
             instructionMessage.innerText = 'Choose a word to start:'
         }
+        else if (current == 'waitForPlayers'){
+            instructionMessage.innerText = 'Waiting for more players...'
+        }
     }
 
     function displayReadyMembers() {
         if (!gameStart) {
             socket.emit('get-numbers', lobbyName)
             socket.on('get-number-return', (numbers)=>{
-                console.log("reached")
-                membersMessage.innerText = numbers.readied + ' players ready out of ' + numbers.members
+                if (numbers.members > 1){
+                    membersMessage.innerText = numbers.readied + ' players ready out of ' + numbers.members
+                    displayInstruction('startGame')
+                    setupWordList()
+                }
+                else{
+                    membersMessage.innerText = 'You need more than 1 player to start :('
+                    displayInstruction('waitForPlayers')
+                }
             })
         }
     }

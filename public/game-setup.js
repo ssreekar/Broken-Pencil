@@ -152,10 +152,13 @@ function setupGamepage(){
     finishDrawDiv.style.display = 'none'
     instructions.style.display = 'block'
     members.style.display = 'block'
-    wordDiv.style.display = 'block'
     leaveButtonsDiv.style.display = 'block'
     playAgainButton.style.display = 'none'
     finalResultsDiv.style.display = 'none'
+}
+
+function setupWordList(){
+    wordDiv.style.display = 'block'
 }
 
 function setupDraw(){
