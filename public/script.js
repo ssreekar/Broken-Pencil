@@ -1,4 +1,4 @@
-$(function() {
+$(document).ready(function() {
     var socket = io()
     setupHomepage()
 
@@ -319,51 +319,6 @@ $(function() {
     // Start Drawing
     socket.on('start-drawing', (newWord)=>{
         draw_start(newWord)
-})
-
-// The reason i put get_drawing into a function is so
-// i could access it from outside the socket.on () block
-// ie. the 'next-match' event
-function draw_start (newWord) {
-    console.log("Start Drawing!")
-    word = newWord
-    displayInstruction('draw')
-    turnOffDisplay()
-    setupDraw()
-    clearInterval(countdown)
-    startTimer(60, 'drawing')
-}
-
-// Start Drawing
-socket.on('start-drawing', (newWord)=>{
-    draw_start(newWord)
-})
-
-// Same logic as draw_start
-function draw_guess (newDrawing) {
-    console.log('Start Guessing!')
-    displayInstruction('guess')
-    clearInterval(countdown)
-    setupGuess()
-    startTimer(20, 'guessing')
-    displayPicture(newDrawing)
-}
-
-// Guess drawing
-socket.on('start-guessing', (newDrawing)=>{
-    draw_guess(newDrawing)
-})
-
-function sendGuess(guessedWord){
-    socket.emit('guessed-word', guessedWord)
-}
-
-function createWordButtons(){
-    generateWords()
-    var easyBtn = document.getElementById('easy-btn')
-    easyBtn.addEventListener('click', ()=>{
-        wordBtn = easyBtn.value
-        socket.emit('picked-word', wordBtn)
     })
 
     // Same logic as draw_start
@@ -372,6 +327,7 @@ function createWordButtons(){
         displayInstruction('guess')
         clearInterval(countdown)
         setupGuess()
+        startTimer(20, 'guessing')
         displayPicture(newDrawing)
     }
 
@@ -380,6 +336,14 @@ function createWordButtons(){
         draw_guess(newDrawing)
     })
 
+    guessForm.addEventListener('submit', e=>{
+        e.preventDefault()
+        guessedWord = guessTextBox.value;
+        sendGuess(guessedWord)
+        console.log(`You guessed: ${guessedWord}`)
+        guessTextBox.value = ''
+    })
+    
     function sendGuess(guessedWord){
         socket.emit('guessed-word', guessedWord)
     }

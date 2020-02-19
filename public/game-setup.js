@@ -177,15 +177,6 @@ function setupGuess(){
     wordDiv.style.display = 'none'
 }
 
-guessForm.addEventListener('submit', e=>{
-    e.preventDefault()
-    guessedWord = guessTextBox.value;
-    sendGuess(guessedWord)
-    console.log(`You guessed: ${guessedWord}`)
-    guessTextBox.value = ''
-})
-
-
 function setupResults(data){
     drawingBoard.style.display = 'none'
     titleDiv.style.display = 'block'
