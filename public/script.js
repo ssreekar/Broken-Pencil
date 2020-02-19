@@ -326,6 +326,7 @@ function draw_guess (newDrawing) {
     displayInstruction('guess')
     clearInterval(countdown)
     setupGuess()
+    startTimer(20, 'guessing')
     displayPicture(newDrawing)
 }
 
