@@ -205,6 +205,7 @@ io.on("connection", socket => {
 
     socket.on('picked-word', word=>{
         userCurrentData[socket.id] = word
+        userChainedData[socket.id] = []
         userChainedData[socket.id].push(word)
         let nextPlayer = userNextPlayer[socket.id]
         let nextNextPlayer = userNextPlayer[nextPlayer]
