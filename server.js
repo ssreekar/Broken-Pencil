@@ -184,6 +184,7 @@ io.on("connection", socket => {
     userNextPlayer = {} // stores key: player id, value: next player id
     userCurrentData = {} // stores key: player id, value: current drawing/guessed word
     userPreviousData = {} // stores key: player id, value: word if no one wrote anything
+    tempPreviousData = {} // stores key: player id, value: word if no one wrote anything (but inbetween rounds)
     userTotalData = {} // stores key: player id, value: previous drawings/guessed words
     userChainedData = {} // stores key:player id, value: chain of drawings and guessed words
     userStatus = {} // stores key: player id, value: boolean if done task
@@ -218,8 +219,7 @@ io.on("connection", socket => {
         userChainedData[socket.id] = []
         userChainedData[socket.id].push(word)
         let nextPlayer = userNextPlayer[socket.id]
-        let nextNextPlayer = userNextPlayer[nextPlayer]
-        userPreviousData[nextNextPlayer] = word
+        tempPreviousData[nextPlayer] = word
         //socket.emit('word-chosen', word)
     })
 
@@ -251,6 +251,15 @@ io.on("connection", socket => {
             }
             else if (data.event == 'guessing'){
                 nextEvent = 'start-drawing'
+                let number = 0
+                if (lobbies[data.lobbyName] != null) {
+                    number = lobbies[data.lobbyName].length
+                }
+                for (let i = 0; i < number; i++){
+                    let userId = lobbies[data.lobbyName][i]
+                    userPreviousData[userId] = tempPreviousData[userId]
+                    tempPreviousData[userId] = ''
+                }
             }
             else{}
             console.log(`Everyone is ${nextEvent}`)        
@@ -341,7 +350,7 @@ io.on("connection", socket => {
     function doGuess(guessedWord) {
         var nextPlayer = userNextPlayer[socket.id]
         let nextNextPlayer = userNextPlayer[nextPlayer]
-        userPreviousData[nextNextPlayer] = guessedWord
+        tempPreviousData[nextNextPlayer] = guessedWord
         userCurrentData[nextPlayer] = guessedWord
         userTotalData[socket.id].push(guessedWord)
         console.log(`${users[socket.id]} sent ${users[nextPlayer]} the word ${guessedWord}`)
@@ -362,6 +371,7 @@ io.on("connection", socket => {
 
 
     function wordScramble(word) {
+        console.log("Word is: " + word)
         word = word.toLowerCase()
         let visited = new Array(word.length)
         let finalWord = ''
@@ -391,13 +401,14 @@ io.on("connection", socket => {
     }
 
     socket.on('getsend-prev-data', userId =>{
-        console.log("Attempting to get previous data " + userPreviousData[userId])
+        console.log(userId +" Attempting to get previous data " + userPreviousData[userId])
         doGuess(wordScramble(userPreviousData[userId]))
     })
 
     socket.on('play-again', lobbyName=>{
         userCurrentData[socket.id] = null
-        userPreviousData[socket.id] = [] 
+        userPreviousData[socket.id] = ''
+        tempPreviousData[socket.id] = ''
         userTotalData[socket.id] = []
         userChainedData[socket.id] = []
     })
