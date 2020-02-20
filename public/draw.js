@@ -191,6 +191,8 @@ function displayPicture(baseImage) {
 function turnOffDisplay() {
     cantDraw = false;
     strokes = [];
+    tempImage = '';
+    resized = false;
     redraw();
 }
 
