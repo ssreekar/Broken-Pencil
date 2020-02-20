@@ -247,6 +247,15 @@ io.on("connection", socket => {
             else if (data.event == 'picking-word'){
                 if (readyNumber[data.lobbyName] == lobbies[data.lobbyName].length){
                     nextEvent = 'start-drawing'
+                    let number = 0
+                    if (lobbies[data.lobbyName] != null) {
+                        number = lobbies[data.lobbyName].length
+                    }
+                    for (let i = 0; i < number; i++){
+                        let userId = lobbies[data.lobbyName][i]
+                        userPreviousData[userId] = tempPreviousData[userId]
+                        tempPreviousData[userId] = ''
+                    }
                 }
             }
             else if (data.event == 'guessing'){
