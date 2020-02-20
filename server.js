@@ -213,6 +213,7 @@ io.on("connection", socket => {
     })
 
     socket.on('picked-word', word=>{
+        console.log(`${users[socket.id]} picked ${word}`)
         userCurrentData[socket.id] = word
         userChainedData[socket.id] = []
         userChainedData[socket.id].push(word)
@@ -243,7 +244,12 @@ io.on("connection", socket => {
             else if (data.event == 'drawing'){
                 nextEvent = 'start-guessing'
             }
-            else if (data.event == 'guessing' || data.event == 'picking-word'){
+            else if (data.event == 'picking-word'){
+                if (readyNumber[data.lobbyName] == lobbies[data.lobbyName].length){
+                    nextEvent = 'start-drawing'
+                }
+            }
+            else if (data.event == 'guessing'){
                 nextEvent = 'start-drawing'
             }
             else{}
@@ -320,6 +326,7 @@ io.on("connection", socket => {
     // Determines if a given lobby should start
     socket.on('should-start', (lobbyName)=> {
         console.log("Determining if " + lobbyName + " should start")
+        console.log(`${readyNumber[lobbyName]} ready of ${lobbies[lobbyName].length}`)
         if (readyInformation[lobbyName] != null && readyNumber[lobbyName] != null) {
             if (readyNumber[lobbyName] == lobbies[lobbyName].length) {
                 socket.emit('should-start-return', true)

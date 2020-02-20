@@ -200,6 +200,7 @@ $(document).ready(function() {
                 socket.emit('ready-up', {userId: personalId, lobby: lobbyName})
                 socket.emit('should-start', lobbyName)
                 socket.on('should-start-return', (data)=>{
+                    console.log(`should-start returned ${data}`)
                     if (data){
                         socket.emit('start-game', lobbyName)
                     }
