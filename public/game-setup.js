@@ -29,6 +29,7 @@ var createLobbyModal = document.getElementById('create-lobby-modal')
 const newLobbyInput = document.getElementById('new-lobby-input')
 const lobbyPasswordInput = document.getElementById('lobby-password-input')
 const joinLobbyButton = document.getElementById('join-lobby-button')
+var joinLobbyError = document.getElementById('join-lobby-error')
 
 const enterPasswordForm = document.getElementById('enter-password-form')
 const enterPasswordInput = document.getElementById('enter-password-input')

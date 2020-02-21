@@ -74,6 +74,8 @@ $(document).ready(function() {
             }
             joinLobby(data.lobbyName)
         } else{
+            console.log("no exist join?")
+            joinLobbyError.innerText = 'Lobby does not exist'
             lobbyInput.classList.add('is-invalid')
         }
     })
@@ -88,8 +90,12 @@ $(document).ready(function() {
                 console.log(`Joined existing lobby: ${data.lobbyName}`)
                 joinLobby(data.lobbyName)
             }
-        } else{
+        } else if (data.action == 'create'){
             newLobbyInput.classList.add('is-invalid')
+        } else {
+            console.log("no exist else")
+            joinLobbyError.innerText = 'Lobby has already started game'
+            lobbyInput.classList.add('is-invalid')
         }
     })
 
@@ -151,6 +157,7 @@ $(document).ready(function() {
         strokes = []
         brush.color = "#000000"
         resized = false
+        changeBound()
         redraw()
         appendInfo('You Joined the Broken Pencil chat!')
     })
@@ -409,6 +416,7 @@ $(document).ready(function() {
         console.log('Game has finished!')
         clearInterval(countdown)
         setupResults(data)
+        socket.emit('finished-game', lobbyName)
     })
 
     playAgainButton.addEventListener('click', ()=>{

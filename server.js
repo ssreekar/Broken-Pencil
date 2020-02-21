@@ -93,6 +93,10 @@ io.on("connection", socket => {
         console.log(`Check lobby exists. Action: ${data.action}`)
         let passwordProtected = data.lobbyName in lobbyPasswords
         if (data.lobbyName in lobbies){
+            if (lobbyStatus[data.lobbyName]) {
+                console.log('start?')
+                data.action = 'started'
+            }
             socket.emit('lobby-exists', {lobbyName: data.lobbyName, action: data.action, passwordProtected})
         }
         else{
@@ -115,6 +119,7 @@ io.on("connection", socket => {
             socket.emit('password-incorrect')
         }
     })
+
 
     socket.on('join-lobby', (data)=>{
         console.log(`${users[socket.id]} Joined ${data.newLobbyName}`)
@@ -223,6 +228,9 @@ io.on("connection", socket => {
         //socket.emit('word-chosen', word)
     })
 
+    socket.on('finished-game', lobbyName=>{
+        lobbyStatus[lobbyName] = false
+    })
 
     socket.on('finished-event', data=>{
         console.log(`${users[socket.id]} finished ${data.event}`)
