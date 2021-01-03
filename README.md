@@ -1,4 +1,5 @@
 # Broken Pencil
+http://broken--pencil.herokuapp.com/
 
 This web app is a remake of the popular board game "Telestrations".
 
@@ -19,7 +20,3 @@ This game is a combination between Pictionary and broken telephone. In your grou
 ### Created By: 
 
 Aaron Zhang, Sharujan Sreekaran, Matthew Tam, and Kevin Wang
-
-### Link to Game
-
-http://broken--pencil.herokuapp.com/
